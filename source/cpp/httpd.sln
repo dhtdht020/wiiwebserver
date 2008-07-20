@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "httpd", "httpd.vcproj", "{2FD6B553-7C18-42B0-BD23-F166F96BE486}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Revolution = Debug|Revolution
+		Debug|test2 = Debug|test2
+		Debug|Win32 = Debug|Win32
+		Release|Revolution = Release|Revolution
+		Release|test2 = Release|test2
+		Release|Win32 = Release|Win32
+		testcofnig|Revolution = testcofnig|Revolution
+		testcofnig|test2 = testcofnig|test2
+		testcofnig|Win32 = testcofnig|Win32
+		testconfig|Revolution = testconfig|Revolution
+		testconfig|test2 = testconfig|test2
+		testconfig|Win32 = testconfig|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Debug|Revolution.ActiveCfg = Debug|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Debug|Revolution.Build.0 = Debug|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Debug|test2.ActiveCfg = Debug|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Debug|Win32.Build.0 = Debug|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Release|Revolution.ActiveCfg = Release|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Release|Revolution.Build.0 = Release|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Release|test2.ActiveCfg = Release|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Release|Win32.ActiveCfg = Release|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.Release|Win32.Build.0 = Release|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testcofnig|Revolution.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testcofnig|test2.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testcofnig|Win32.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testcofnig|Win32.Build.0 = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testconfig|Revolution.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testconfig|test2.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testconfig|test2.Build.0 = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testconfig|Win32.ActiveCfg = testcofnig|Win32
+		{2FD6B553-7C18-42B0-BD23-F166F96BE486}.testconfig|Win32.Build.0 = testcofnig|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
