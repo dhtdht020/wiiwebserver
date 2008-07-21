@@ -2,7 +2,6 @@ all: httpd.elf
 
 .SUFFIXES:
 
-LIBS =
 INCLUDE = -isystem C:\\Program\\boost\\boost_1_34_1 -isystem $(LIBOGC_INC)
 
 ifeq ($(strip $(DEVKITPPC)),)
@@ -11,9 +10,8 @@ endif
 
 include $(DEVKITPPC)/wii_rules
 
-warnings = -Wctor-dtor-privacy -Woverloaded-virtual \
- -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
- -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type \
+warnings = -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
+ -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type -Wunused-value \
  -Wswitch -Wtrigraphs -Wunused-function -Wunused-variable -Wunused-parameter \
  -Wunused-label -Wuninitialized -Wfloat-equal -Wshadow \
  -Wlarger-than-10000 -Wcast-qual -Wcast-align -Wsign-compare \
@@ -23,23 +21,26 @@ cwarnings = $(warnings) -Wnonnull -Wimplicit-int -Werror-implicit-function-decla
 	 -Wtraditional  -Wbad-function-cast -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 	 -Wnested-externs
 	 
-cppwarnings = $(warnings)
+cppwarnings = $(warnings) -Woverloaded-virtual -Wctor-dtor-privacy
 
 optimizations = -fno-guess-branch-probability -ffast-math
 
-COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -Werror -fexceptions -ftabstop=2 $(INCLUDE)
+COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -Werror -fexceptions -ftabstop=2 
 
 CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
 CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++ -ffor-scope
+CPPFLAGS = $(INCLUDE)
 
 LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
 
 LIBS	:=	-lfat -lwiiuse -lbte -logc -lm
 
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB)
+LIBPATHS	:=-L $(LIBOGC_LIB)
 					
-export VPATH	:=	
+.LIBPATTERNS = lib%.so lib%.a
+VPATH	:=	LIBPATHS
+
+DEPSDIR = deps
 
 
 CFILES		:=	$(wildcard *.c)
@@ -47,7 +48,10 @@ CPPFILES	:=	$(wildcard *.cpp)
 sFILES		:=	$(wildcard *.s)
 SFILES		:=	$(wildcard *.S)
 
-export OFILES	:=	$(patsubst %.cpp,%.o,$(CPPFILES)) $(patsubst %.c,%.o,$(CFILES))
+export OFILES	:=	$(patsubst %.cpp,%.o,$(CPPFILES)) \
+ $(patsubst %.s,%.o,$(sFILES)) \
+ $(patsubst %.c,%.o,$(CFILES)) \
+ $(patsubst %.S,%.o,$(SFILES))
 					
 ifeq ($(strip $(CPPFILES)),)
 	export LD	:=	$(CC)
@@ -56,12 +60,14 @@ else
 endif
 
 httpd.elf : $(OFILES)
-
-	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) -v $(OFILES) -o httpd.elf
+	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) -v $^ -o $@
 
 .PHONY: all clean rebuild
 
 clean :
-	rm $(wildcard *.elf) $(wildcard *.dol) $(wildcard *.o)
+	$(RM) $(wildcard *.elf) $(wildcard *.dol) $(wildcard *.o)
 	
 rebuild : clean all
+
+DEPENDS	:=	$(OFILES:.o=.d)
+-include $(DEPENDS)
