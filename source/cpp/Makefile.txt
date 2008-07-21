@@ -31,7 +31,7 @@ CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
 CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -ffor-scope
 CPPFLAGS = $(INCLUDE)
 
-LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
+LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(patsubst %.elf,%.map,$(notdir $@))
 
 LIBS	:=	-lfat -lwiiuse -lbte -logc -lm
 
@@ -60,7 +60,7 @@ else
 endif
 
 httpd.elf : $(OFILES)
-	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) -v $^ -o $@
+	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) $^ -o $@
 
 .PHONY: all clean rebuild
 
@@ -71,3 +71,14 @@ rebuild : clean all
 
 DEPENDS	:=	$(OFILES:.o=.d)
 -include $(DEPENDS)
+
+.DELETE_ON_ERROR : $(OFILES) *.elf
+
+#dependensies
+
+request.o : Resource.h request.h Globals.cpp Client.h
+Resource.o : Resource.h request.h
+Client.o : client.h
+globals.o : globals.h
+main.o : configuration.h display.h listeningSocket.h
+configuration.o : configuration.h
