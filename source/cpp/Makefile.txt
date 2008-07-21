@@ -28,7 +28,7 @@ optimizations = -fno-guess-branch-probability -ffast-math
 COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) $(INCLUDE) -Werror -fexceptions -ftabstop=2 
 
 CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
-CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++ -ffor-scope
+CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -ffor-scope
 CPPFLAGS = $(INCLUDE)
 
 LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
