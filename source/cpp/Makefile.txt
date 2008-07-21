@@ -25,7 +25,7 @@ cppwarnings = $(warnings) -Woverloaded-virtual -Wctor-dtor-privacy
 
 optimizations = -fno-guess-branch-probability -ffast-math
 
-COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -Werror -fexceptions -ftabstop=2 
+COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) $(INCLUDE) -Werror -fexceptions -ftabstop=2 
 
 CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
 CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++ -ffor-scope
