@@ -3,7 +3,7 @@ all: httpd.elf
 .SUFFIXES:
 
 LIBS =
-INCLUDE = -IC:\\Program\\boost\\boost_1_34_1
+INCLUDE = -isystem C:\\Program\\boost\\boost_1_34_1 -isystem $(LIBOGC_INC)
 
 ifeq ($(strip $(DEVKITPPC)),)
 $(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>devkitPPC)
@@ -17,7 +17,7 @@ warnings = -Wctor-dtor-privacy -Woverloaded-virtual \
  -Wswitch -Wtrigraphs -Wunused-function -Wunused-variable -Wunused-parameter \
  -Wunused-label -Wuninitialized -Wfloat-equal -Wshadow \
  -Wlarger-than-10000 -Wcast-qual -Wcast-align -Wsign-compare \
- -Wredundant-decls -Wunreachable-code -Werror
+ -Wredundant-decls
  
 cwarnings = $(warnings) -Wnonnull -Wimplicit-int -Werror-implicit-function-declaration -Wmain \
 	 -Wtraditional  -Wbad-function-cast -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
@@ -27,10 +27,10 @@ cppwarnings = $(warnings)
 
 optimizations = -fno-guess-branch-probability -ffast-math
 
-COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -fexceptions -ftabstop=2 $(INCLUDE)
+COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -Werror -fexceptions -ftabstop=2 $(INCLUDE)
 
 CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
-CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++
+CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++ -ffor-scope
 
 LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
 
@@ -57,13 +57,11 @@ endif
 
 httpd.elf : $(OFILES)
 
-	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) $(OFILES) -o httpd.elf
+	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) -v $(OFILES) -o httpd.elf
 
 .PHONY: all clean rebuild
 
 clean :
-	rm *.elf
-	rm *.dol
-	rm *.o
+	rm $(wildcard *.elf) $(wildcard *.dol) $(wildcard *.o)
 	
 rebuild : clean all
