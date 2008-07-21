@@ -28,7 +28,7 @@ void Request::doRequest() {
 				loadErrorReply(404);
 			} catch (const InvalidRequestMethod &) {
 				loadErrorReply(405);
-				resource->setAllowHeader(this);
+				resource->setAllowHeader(*this);
 			} catch (const AuthorizationRequired &) {
 				loadErrorReply(401);
 			} catch (const ForbidenResource &) {

@@ -1,7 +1,9 @@
+extern "C" {
 #include <ogcsys.h>
 #include <gccore.h>
 
 #include <wiiuse/wpad.h>
+}
 
 static void *xfb;
 static GXRModeObj *rmode;
@@ -22,4 +24,7 @@ void *Display(void*) {
 	//TODO: add input and display proccessing loop
 
 	return (void*)0;
+}
+
+void startDisplayThread() {
 }

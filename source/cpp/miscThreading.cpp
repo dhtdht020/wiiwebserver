@@ -1,0 +1,4 @@
+
+void waitForAllThreadsToEnd(void) {
+	return;
+}

@@ -1,4 +1,6 @@
+extern "C" {
 #include <fat.h>
+}
 
 #include "configuration.h"
 #include "display.h"
