@@ -1,0 +1,69 @@
+all: httpd.elf
+
+.SUFFIXES:
+
+LIBS =
+INCLUDE = -IC:\\Program\\boost\\boost_1_34_1
+
+ifeq ($(strip $(DEVKITPPC)),)
+$(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>devkitPPC)
+endif
+
+include $(DEVKITPPC)/wii_rules
+
+warnings = -Wctor-dtor-privacy -Woverloaded-virtual \
+ -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
+ -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type \
+ -Wswitch -Wtrigraphs -Wunused-function -Wunused-variable -Wunused-parameter \
+ -Wunused-label -Wuninitialized -Wfloat-equal -Wshadow \
+ -Wlarger-than-10000 -Wcast-qual -Wcast-align -Wsign-compare \
+ -Wredundant-decls -Wunreachable-code -Werror
+ 
+cwarnings = $(warnings) -Wnonnull -Wimplicit-int -Werror-implicit-function-declaration -Wmain \
+	 -Wtraditional  -Wbad-function-cast -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
+	 -Wnested-externs
+	 
+cppwarnings = $(warnings)
+
+optimizations = -fno-guess-branch-probability -ffast-math
+
+COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) -ftabstop=2 $(INCLUDE)
+
+CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
+CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -Weffc++
+
+LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
+
+LIBS	:=	-lfat -lwiiuse -lbte -logc -lm
+
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
+					-L$(LIBOGC_LIB)
+					
+export VPATH	:=	
+
+
+CFILES		:=	$(wildcard *.c)
+CPPFILES	:=	$(wildcard *.cpp)
+sFILES		:=	$(wildcard *.s)
+SFILES		:=	$(wildcard *.S)
+
+export OFILES	:=	$(patsubst %.cpp,%.o,$(CPPFILES)) $(patsubst %.c,%.o,$(CFILES))
+					
+ifeq ($(strip $(CPPFILES)),)
+	export LD	:=	$(CC)
+else
+	export LD	:=	$(CXX)
+endif
+
+httpd.elf : $(OFILES)
+
+	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) $(OFILES) -o httpd.elf
+
+.PHONY: all clean rebuild
+
+clean :
+	rm *.elf
+	rm *.dol
+	rm *.o
+	
+rebuild : clean all

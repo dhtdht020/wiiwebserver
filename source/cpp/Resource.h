@@ -19,5 +19,8 @@ public:
 
 class NonExistantResource {};
 class InvalidRequestMethod {};
-class ForbidenResource {};
+class ForbidenResource {
+public:
+	virtual ~ForbidenResource();
+};
 class AuthorizationRequired : public ForbidenResource {};

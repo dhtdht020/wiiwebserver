@@ -7,7 +7,7 @@ using std::string;
 
 //class Request;
 
-#include "Client.h"
+class Client;
 #include "Resource.h"
 
 class Resource;
@@ -32,12 +32,12 @@ private:
 	string replyBody;
 
 	Request(Client *c);
-/*
+
 private://methods that we DONT want but are forced to have,
 	//make them unimplemented and private to prevent them from ever being used
-	Request();
+	Request(void);
 	Request(const &Request);
-	operator=(const &Request);*/
+	Request &operator=(const &Request);
 
 	void readRequest(void);
 	void readRequestHeaders(void);
