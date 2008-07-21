@@ -39,8 +39,8 @@ private:
 private://methods that we DONT want but are forced to have,
 	//make them unimplemented and private to prevent them from ever being used
 	Request(void);
-	Request(const &Request);
-	Request &operator=(const &Request);
+	Request(const Request &);
+	Request &operator=(const Request &);
 
 	void readRequest(void);
 	void readRequestHeaders(void);
