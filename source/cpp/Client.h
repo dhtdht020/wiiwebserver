@@ -14,7 +14,7 @@ class Client {
 	time_t lastRequest;
 
 public:
-	Client(void);
+	Client(SOCKET);
 	~Client(void);
 
 	void close(void);
