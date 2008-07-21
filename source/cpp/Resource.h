@@ -1,4 +1,6 @@
 #pragma once
+#ifndef RESOURCE_H
+#define RESOURCE_H
 
 //class Resource;
 
@@ -24,3 +26,5 @@ public:
 	virtual ~ForbidenResource();
 };
 class AuthorizationRequired : public ForbidenResource {};
+
+#endif

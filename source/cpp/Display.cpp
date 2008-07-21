@@ -1,14 +1,10 @@
-//#include <ogcsys.h>
-//#include <gccore.h>
+#include <ogcsys.h>
+#include <gccore.h>
 
-//#include <wiiuse/wpad.h>
+#include <wiiuse/wpad.h>
 
-#include "fakewiiheader.h"
-
-void *xfb;
-GXRModeObj *rmode;
-
-#define NULL 0
+static void *xfb;
+static GXRModeObj *rmode;
 
 void *Display(void*) {
 	VIDEO_Init();

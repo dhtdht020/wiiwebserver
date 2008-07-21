@@ -1,5 +1,4 @@
-//#include <fat.h>
-#include "fakewiiheader.h"
+#include <fat.h>
 
 #include "configuration.h"
 #include "display.h"

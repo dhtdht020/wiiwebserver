@@ -1,4 +1,7 @@
 #pragma once
+#ifndef REQUEST_H
+#define REQUEST_H
+
 #include <map>
 #include <string>
 
@@ -13,6 +16,8 @@ class Client;
 class Resource;
 
 class Request {
+public:	
+	Request(Client *c);
 private:
 	Client *client;
 
@@ -30,8 +35,6 @@ private:
 	unsigned int replyNumber;
 	map<string,string> replyHeaders;
 	string replyBody;
-
-	Request(Client *c);
 
 private://methods that we DONT want but are forced to have,
 	//make them unimplemented and private to prevent them from ever being used
@@ -68,3 +71,5 @@ private://methods that we DONT want but are forced to have,
 };
 
 class InvalidRequest {};
+
+#endif

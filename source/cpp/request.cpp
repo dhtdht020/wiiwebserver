@@ -1,5 +1,5 @@
 #include "request.h"
-
+#include "Client.h"
 
 #include <boost/lexical_cast.hpp>
 
