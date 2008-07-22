@@ -56,4 +56,4 @@ void Canvas::pixel::operator !() {
 	b^=256;
 }
 
-//position(unsigned int x_p,unsigned int y_p) : x(x_p), y(y_p) {};
+Canvas::position(unsigned int x_p,unsigned int y_p) : x(x_p), y(y_p) {};
