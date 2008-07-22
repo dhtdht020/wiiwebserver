@@ -71,15 +71,6 @@ clean :
 rebuild : clean all
 
 DEPENDS	:=	$(OFILES:.o=.d)
--include $(DEPENDS)
+-include $(foreach depend,$(DEPENDS),$(DEPSDIR)/$(depend))
 
 .DELETE_ON_ERROR : $(OFILES) *.elf
-
-#dependensies
-
-request.o : Resource.h request.h Globals.cpp Client.h
-Resource.o : Resource.h request.h
-Client.o : client.h
-globals.o : globals.h
-main.o : configuration.h display.h listeningSocket.h
-configuration.o : configuration.h
