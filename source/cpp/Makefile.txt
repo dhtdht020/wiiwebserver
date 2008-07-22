@@ -9,7 +9,8 @@ endif
 
 include $(DEVKITPPC)/wii_rules
 
-INCLUDE := -isystem $(boostpath) -isystem $(LIBOGC_INC)
+INCLUDE := -isystem $(boostpath) -isystem $(LIBOGC_INC) \
+	-isystem $(wiispritepath)/include -isystem $(wiispritepath)/../libpng/include
 
 warnings = -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
  -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type -Wunused-value \
@@ -34,9 +35,9 @@ CPPFLAGS = $(INCLUDE)
 
 LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(patsubst %.elf,%.map,$(notdir $@))
 
-LIBS	:=	-lfat -lwiiuse -lbte -logc -lm
+LIBS	:=	-lwiisprite -lpng -lz -lfat -lwiiuse -lbte -logc -lm
 
-LIBPATHS	:=-L $(LIBOGC_LIB)
+LIBPATHS	:=-L $(LIBOGC_LIB) -L $(wiispritepath)/lib -L $(wiispritepath)/../libpng/lib
 					
 .LIBPATTERNS = lib%.so lib%.a
 VPATH	:=	LIBPATHS
