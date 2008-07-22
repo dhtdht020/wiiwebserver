@@ -2,13 +2,17 @@ all: httpd.elf
 
 .SUFFIXES:
 
-INCLUDE = -isystem C:\\Program\\boost\\boost_1_34_1 -isystem $(LIBOGC_INC)
+
 
 ifeq ($(strip $(DEVKITPPC)),)
 $(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>devkitPPC)
 endif
 
 include $(DEVKITPPC)/wii_rules
+
+include userpaths.mk
+
+INCLUDE := -isystem $(boostpath) -isystem $(LIBOGC_INC)
 
 warnings = -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
  -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type -Wunused-value \
