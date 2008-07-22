@@ -61,7 +61,8 @@ else
 endif
 
 httpd.elf : $(OFILES)
-	$(LD) $(LDFLAGS) $(LIBPATHS) $(LIBS) $^ -o $@
+	@echo linking...
+	@$(LD) $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
 
 .PHONY: all clean rebuild
 

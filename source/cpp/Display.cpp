@@ -5,6 +5,8 @@ extern "C" {
 #include <wiiuse/wpad.h>
 }
 
+#include "globals.h"
+
 static void *xfb;
 static GXRModeObj *rmode;
 
@@ -18,7 +20,7 @@ void *Display(void*) {
 	//console_init(xfb,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
 	VIDEO_Configure(rmode);
 	VIDEO_SetNextFramebuffer(xfb);
-	VIDEO_SetBlack(FALSE);
+	VIDEO_SetBlack(TRUE);
 	VIDEO_Flush();
 
 	//TODO: add input and display proccessing loop
@@ -27,4 +29,5 @@ void *Display(void*) {
 }
 
 void startDisplayThread() {
+	LWP_CreateThread(&displayThread,Display,NULL,NULL,NULL,1);
 }
