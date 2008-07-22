@@ -1,7 +1,6 @@
 all: httpd.elf
 
-.SUFFIXES:
-
+include userpaths.mk
 
 
 ifeq ($(strip $(DEVKITPPC)),)
@@ -9,8 +8,6 @@ $(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>dev
 endif
 
 include $(DEVKITPPC)/wii_rules
-
-include userpaths.mk
 
 INCLUDE := -isystem $(boostpath) -isystem $(LIBOGC_INC)
 
