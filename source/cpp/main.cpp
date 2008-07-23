@@ -15,9 +15,9 @@ int main() {
 
 	startDisplayThread();
 
-	setupListeningSocket();
+	//setupListeningSocket();
 
-	startListeningThread();
+	//startListeningThread();
 	
 	waitForAllThreadsToEnd();
 

@@ -10,5 +10,5 @@ extern "C" {
 
 void waitForAllThreadsToEnd(void) {
 	LWP_JoinThread(displayThread,NULL);
-	LWP_JoinThread(listenThread,NULL);
+	//LWP_JoinThread(listenThread,NULL);
 }
