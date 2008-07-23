@@ -35,10 +35,10 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 
 		closed[pos.x+pos.y*GetWidth()]=true;
 
-		tryToAdd(open,closed,p,0,-1,pos);
-		tryToAdd(open,closed,p,0,1,pos);
-		tryToAdd(open,closed,p,-1,0,pos);
-		tryToAdd(open,closed,p,1,0,pos);
+		tryToAdd(open,closed,basepixel,0,-1,pos);
+		tryToAdd(open,closed,basepixel,0,1,pos);
+		tryToAdd(open,closed,basepixel,-1,0,pos);
+		tryToAdd(open,closed,basepixel,1,0,pos);
 
 		operator()(pos.x,pos.y)=p;
 
