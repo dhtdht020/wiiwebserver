@@ -9,7 +9,7 @@ Canvas::Canvas(void) {
 Canvas::~Canvas(void) {
 }
 
-inline Canvas::pixel &Canvas::operator ()(unsigned int x, unsigned int y) {
+inline Canvas::pixel &Canvas::operator ()(const unsigned int x, const unsigned int y) {
 	//don't touch this, the syntax is very hard to get right here
 	return *(
 			(Canvas::pixel *)(
