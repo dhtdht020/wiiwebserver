@@ -3,7 +3,8 @@
 #define XLOOP for(unsigned int xi=x1;xi<x2;xi++)
 #define YLOOP for(unsigned int yi=y1;yi<y2;yi++)
 
-Canvas::Canvas(void) {
+Canvas::Canvas(const unsigned int width, const unsigned int height) {
+	_InitializeImage(width,height);
 }
 
 Canvas::~Canvas(void) {
@@ -38,7 +39,7 @@ void Canvas::filledRect(const unsigned int x1, const unsigned int x2, const unsi
 			operator()(xi,yi)=p;
 		}
 	}
-}
+};
 
 void Canvas::operator !(void) {
 	for(unsigned int iy=GetHeight();iy>0;iy--) {
@@ -48,7 +49,15 @@ void Canvas::operator !(void) {
 	}
 };
 
-inline void Canvas::flush(void) { _Flush(); };
+void Canvas::clear(const pixel &p) {
+	for(unsigned int iy=GetHeight();iy>0;iy--) {
+		for(unsigned int ix=GetWidth();ix>0;ix--) {
+			operator()(ix-1,iy-1)=p;
+		}
+	}
+};
+
+void Canvas::flush(void) { _Flush(); };
 
 void Canvas::pixel::operator !() {
 	r^=256;
@@ -73,3 +82,10 @@ bool Canvas::position::operator <(const Canvas::position &p2) const {
 		return y<p2.y;
 	}
 };
+
+Canvas::pixel::pixel(const unsigned int r_p, const unsigned int g_p, const unsigned int b_p) :
+	r(r_p), g(g_p), b(b_p), a(255) {};
+
+	Canvas::pixel::pixel(const unsigned int r_p, const unsigned int g_p, const unsigned int b_p, const unsigned int a_p) :
+	r(r_p), g(g_p), b(b_p), a(a_p) {};
+

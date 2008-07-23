@@ -15,6 +15,9 @@ public:
 		void operator!(void);
 		bool operator!=(const pixel&);
 		bool operator==(const pixel&);
+
+		pixel(const unsigned int r, const unsigned int g, const unsigned int b);
+		pixel(const unsigned int r, const unsigned int g, const unsigned int b, const unsigned int a);
 	};
 
 	class position {
@@ -25,7 +28,7 @@ public:
 		bool operator <(const position &p2) const;
 	};
 
-	Canvas(void);
+	Canvas(const unsigned int width, const unsigned int height);
 	~Canvas(void);
 
 	Canvas::pixel &operator() (const unsigned int x, const unsigned int y);
@@ -37,6 +40,7 @@ public:
 	void simple45line(unsigned int x,unsigned int y, const unsigned int lenght);
 	void filledRect(const unsigned int x1, const unsigned int x2, const unsigned int y1, const unsigned int y2, const pixel &p);
 	void floodFill(const unsigned int x, const unsigned int y, const pixel &p);
+	void clear(const pixel &p);
 
 	void operator!(void);
 

@@ -30,7 +30,7 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 
 	bool *closed=new bool[GetHeight()*GetWidth()];
 
-	for(;!open.empty();) {
+	while(!open.empty()) {
 		const position& pos=*(open.begin());
 
 		closed[pos.x+pos.y*GetWidth()]=true;
