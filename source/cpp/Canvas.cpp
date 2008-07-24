@@ -5,20 +5,15 @@
 
 Canvas::Canvas(const unsigned int width, const unsigned int height) {
 	_InitializeImage(width,height);
+	_RGBApixels=new pixel[width*height];
 }
 
 Canvas::~Canvas(void) {
+	delete[] _RGBApixels;
 }
 
 inline Canvas::pixel &Canvas::operator ()(const unsigned int x, const unsigned int y) {
-	//don't touch this, the syntax is very hard to get right here
-	return *(
-			(Canvas::pixel *)(
-			_pixels+(
-				x+y*GetWidth()
-			)*4
-		)
-	);
+	return _RGBApixels[x+y*GetWidth()];
 }
 
 void Canvas::hline(const unsigned int x1, const unsigned int x2, const unsigned int y, const Canvas::pixel &p) {
@@ -57,7 +52,10 @@ void Canvas::clear(const pixel &p) {
 	}
 };
 
-void Canvas::flush(void) { _Flush(); };
+void Canvas::flush(void) { 
+	_convertPixels();
+	_Flush();
+};
 
 void Canvas::pixel::operator !() {
 	r^=256;
@@ -82,6 +80,8 @@ bool Canvas::position::operator <(const Canvas::position &p2) const {
 		return y<p2.y;
 	}
 };
+
+Canvas::pixel::pixel() : r(255), g(0), b(255), a(0) {};//fricking pink to notice undefined data
 
 Canvas::pixel::pixel(const unsigned int r_p, const unsigned int g_p, const unsigned int b_p) :
 	r(r_p), g(g_p), b(b_p), a(255) {};

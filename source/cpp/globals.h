@@ -7,6 +7,9 @@ extern "C" {
 #include <wiiuse/wpad.h>
 }
 
+#include <list>
+using std::list;
+
 using std::string;
 
 extern bool volatile serverOffline;
@@ -15,5 +18,9 @@ extern string serverName;
 
 extern lwp_t displayThread;
 extern lwp_t listenThread;
+
+class Client;
+
+extern list<Client *> clients;
 
 

@@ -1,5 +1,7 @@
 extern "C" {
 #include <fat.h>
+#include <ogcsys.h>
+#include <gccore.h>
 }
 
 #include "configuration.h"
@@ -10,14 +12,17 @@ void waitForAllThreadsToEnd();
 
 int main() {
 	fatInitDefault();
+	PAD_Init();//used by the crash screen
 
 	loadConfiguration();
 
 	startDisplayThread();
 
-	//setupListeningSocket();
+	loadInternalFiles();
 
-	//startListeningThread();
+	setupListeningSocket();
+
+	startListeningThread();
 	
 	waitForAllThreadsToEnd();
 

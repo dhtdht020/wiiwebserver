@@ -106,3 +106,34 @@ void Request::doRequest() {
 
 Request::CacheControll::CacheControll() : cacheMode(PUBLIC),mustRevalidate(false),noTransform(false) {
 };
+
+void Request::readRequest() {
+	readRequestHeaders();
+};
+
+void Request::readRequestHeaders() {
+};
+
+void Request::loadErrorReply(const unsigned int replyNumber_p) {
+	replyNumber=replyNumber_p;
+	if(resource) {
+		delete resource;
+	}
+
+	resource=Resource::load("error:/"+boost::lexical_cast<std::string>(replyNumber_p));
+}
+
+void Request::sendReply() {
+	sendReplyHeaders();
+
+	if(requestMethod!="HEAD") {
+
+
+	}
+};
+
+Request::~Request() {
+	if(resource) {
+		delete resource;
+	}
+}

@@ -2,6 +2,13 @@
 
 #include <ctime>
 
+extern "C" {
+#include <ogcsys.h>
+#include <gccore.h>
+}
+
+#include "threadwraper.h"
+
 typedef int SOCKET;
 
 class Client {
@@ -17,5 +24,14 @@ public:
 	Client(SOCKET);
 	~Client(void);
 
+	void startThread(void);
+
 	void close(void);
+
+private:
+	lwp_t thread;
+
+	int run();
+
+	friend void *objectRun<Client>(void *);
 };

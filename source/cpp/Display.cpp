@@ -14,7 +14,6 @@ using namespace wsp;
 
 void *Display(void*) {
 
-	PAD_Init();
 	WPAD_Init();
 	WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
 
@@ -23,15 +22,17 @@ void *Display(void*) {
 
 	gwd.InitVideo();
 
-	Canvas t(100,100);
+	Canvas t(60,100);
 	t.clear(Canvas::pixel(0,255,255));
 	t.vline(0 ,0 ,99,Canvas::pixel(0,255,0));
-	t.vline(99,0 ,99,Canvas::pixel(0,255,0));
-	t.hline(0 ,99,49,Canvas::pixel(0,255,0));
+	t.vline(59,0 ,99,Canvas::pixel(0,255,0));
+	t.hline(1 ,58,49,Canvas::pixel(0,255,0));
 	t.flush();
 
 	Sprite t_sprite;
 	t_sprite.SetImage(&t);
+	t_sprite.SetStretchHeight(4);
+	t_sprite.SetStretchWidth(4);
 
 	manager.Insert(&t_sprite,0);
 

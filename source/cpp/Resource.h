@@ -17,6 +17,10 @@ public:
 	virtual void setAllowHeader(Request &r)=0;
 	virtual void loadBuffer(string &buffer)=0;
 	virtual void loadBuffer(string &buffer,unsigned int minPos,unsigned int maxPos)=0;
+
+private:
+	Resource(const Resource &);
+	Resource &operator=(const Resource &);
 };
 
 class NonExistantResource {};

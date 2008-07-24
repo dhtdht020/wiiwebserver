@@ -4,7 +4,10 @@
 
 extern "C" {
 #include <network.h>
+#include <errno.h>
 }
+
+#include "Client.h"
 
 typedef s32 SOCKET;
 
@@ -15,7 +18,9 @@ void setupListeningSocket(void) {
 
 	s32 s32Success;
 
-	s32Success=net_init();
+	do {
+		s32Success=net_init();
+	} while (s32Success==-EAGAIN);
 
 	if(s32Success<0) throw listenFailure();
 
@@ -48,6 +53,12 @@ void *Listen(void*) {
 
 		SOCKET clientSocket;
 		clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
+
+		if(clientSocket!=INVALID_SOCKET) {
+			Client *c=new Client(clientSocket);
+			c->startThread();
+			clients.push_back(c);
+		}
 	}
 	return (void*)0;
 }

@@ -18,6 +18,8 @@ class Resource;
 class Request {
 public:	
 	Request(Client *c);
+	void doRequest(void);
+	~Request();
 private:
 	Client *client;
 
@@ -48,7 +50,6 @@ private://methods that we DONT want but are forced to have,
 	void sendReply(void);
 	void sendReplyHeaders(void);
 
-	void doRequest(void);
 
 	bool locateAndLoadResource(void);
 
