@@ -1,25 +1,14 @@
 #pragma once
 
-#include <wiisprite.h>
-using namespace wsp;
+#include "rgbaImage.h"
 
 #include <set>
 using std::set;
 
-class Canvas : public Image {
+class Canvas : public rgbaImage {
 public:
 
-	class pixel {
-	public:
-		u8 r,g,b,a;
-		void operator!(void);
-		bool operator!=(const pixel&);
-		bool operator==(const pixel&);
 
-		pixel(void);
-		pixel(const unsigned int r, const unsigned int g, const unsigned int b);
-		pixel(const unsigned int r, const unsigned int g, const unsigned int b, const unsigned int a);
-	};
 
 	class position {
 	public:
@@ -31,8 +20,6 @@ public:
 
 	Canvas(const unsigned int width, const unsigned int height);
 	~Canvas(void);
-
-	Canvas::pixel &operator() (const unsigned int x, const unsigned int y);
 
 	//extra fast line drawing operators
 	void hline(const unsigned int x1,const unsigned int x2,const unsigned int y,const pixel &p);
@@ -48,12 +35,7 @@ public:
 	void flush(void);
 
 
-protected:
-	pixel *_RGBApixels;
 private:
-	void _convertPixels();
-
-	static const unsigned int tilesize=4;
 
 	//used by flood fill
 	void tryToAdd(set<position> &open,bool *closed,const pixel &p,signed int xOffset,signed int yOffset,const position &pos);
