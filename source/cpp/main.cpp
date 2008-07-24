@@ -10,6 +10,8 @@ extern "C" {
 
 void waitForAllThreadsToEnd();
 
+void loadInternalFiles();
+
 int main() {
 	fatInitDefault();
 	PAD_Init();//used by the crash screen
