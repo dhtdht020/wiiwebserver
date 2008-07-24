@@ -15,8 +15,8 @@ public:
 	static Resource *load(string name);
 
 	virtual void setAllowHeader(Request &r)=0;
-	virtual void loadBuffer(string &buffer)=0;
-	virtual void loadBuffer(string &buffer,unsigned int minPos,unsigned int maxPos)=0;
+	virtual void loadBuffer(string &outBuffer)=0;
+	virtual void loadBuffer(string &outBuffer,unsigned int minPos,unsigned int maxPos)=0;
 
 private:
 	Resource(const Resource &);
