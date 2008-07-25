@@ -8,10 +8,12 @@ extern "C" {
 }
 
 #include "threadwraper.h"
+#include "request.h"
 
 typedef int SOCKET;
 
 class Client {
+	public:
 	//warning, not closed unless there is a timeout
 	//or we are required to because the client wanted us to
 	SOCKET socket;
@@ -20,7 +22,7 @@ class Client {
 	unsigned int numRequests;
 	time_t lastRequest;
 
-public:
+
 	Client(SOCKET);
 	~Client(void);
 

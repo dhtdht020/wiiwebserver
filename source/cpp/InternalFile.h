@@ -15,4 +15,5 @@ private:
 	static map<string,string> files;
 	string name;
 	string contents;
+	friend void loadInternalFiles();
 };

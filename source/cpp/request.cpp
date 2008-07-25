@@ -5,6 +5,10 @@
 
 #include "globals.h"
 
+extern "C" {
+#include <network.h>
+}
+
 
 Request::Request(Client *c) : client(c),cacheControll() {//the constructor for the class
 };
@@ -129,6 +133,14 @@ void Request::sendReply() {
 	if(requestMethod!="HEAD") {
 
 
+	}
+};
+
+void Request::sendReplyHeaders() {
+	map<string,string>::const_iterator endItr=replyHeaders.end();
+	for(map<string,string>::const_iterator itr=replyHeaders.begin();itr!=endItr;itr++) {
+		string outLine=itr->first + ": " +itr->second;
+		net_send(client->socket,outLine.c_str(),outLine.length(),0);
 	}
 };
 
