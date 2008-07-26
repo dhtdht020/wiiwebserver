@@ -51,13 +51,22 @@ void *Listen(void*) {
 		struct sockaddr_in sa;
 		size_t saLenght = sizeof(sa);
 
-		SOCKET clientSocket;
-		clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
 
-		if(clientSocket!=INVALID_SOCKET) {
-			Client *c=new Client(clientSocket);
-			c->startThread();
-			clients.push_back(c);
+		fd_set listenset;
+		FD_ZERO(&listenset);
+		FD_SET(listenSocket,&listenset);
+		int numIncomming = net_select(1,&listenset,0,0,0);
+
+		if(numIncomming>0) {
+
+			SOCKET clientSocket;
+			clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
+
+			if(clientSocket!=INVALID_SOCKET) {
+				Client *c=new Client(clientSocket);
+				c->startThread();
+				clients.push_back(c);
+			}
 		}
 	}
 	return (void*)0;
