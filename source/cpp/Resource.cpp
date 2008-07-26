@@ -30,3 +30,5 @@ Resource *Resource::load(std::string name) {
 	//ops, we ran out of resource locations, time to throw!
 	throw NonExistantResource();
 };
+
+ForbiddenResource::~ForbiddenResource() {};
