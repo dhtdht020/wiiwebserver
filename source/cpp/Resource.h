@@ -25,10 +25,10 @@ private:
 
 class NonExistantResource {};
 class InvalidRequestMethod {};
-class ForbidenResource {
+class ForbiddenResource {
 public:
-	virtual ~ForbidenResource();
+	virtual ~ForbiddenResource();
 };
-class AuthorizationRequired : public ForbidenResource {};
+class AuthorizationRequired : public ForbiddenResource {};
 
 #endif
