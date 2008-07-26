@@ -35,7 +35,7 @@ void Request::doRequest() {
 				resource->setAllowHeader(*this);
 			} catch (const AuthorizationRequired &) {
 				loadErrorReply(401);
-			} catch (const ForbidenResource &) {
+			} catch (const ForbiddenResource &) {
 				loadErrorReply(403);
 			}
 
@@ -52,7 +52,7 @@ void Request::doRequest() {
 	map<string,string>::iterator rangeIter;
 	rangeIter=requestHeaders.find("Range");
 
-	if(rangeIter!=requestHeaders.end()) {
+	if(rangeIter!=requestHeaders.end() && replyNumber<300) {
 		string &headerValue= rangeIter->second;
 
 		unsigned int firstByte=0;
