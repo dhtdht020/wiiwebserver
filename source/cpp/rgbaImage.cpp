@@ -12,7 +12,7 @@ rgbaImage::pixel &rgbaImage::operator ()(const unsigned int x, const unsigned in
 	return _RGBApixels[x+y*GetWidth()];
 };
 
-void rgbaImage::pixel::operator !() {
+void rgbaImage::pixel::operator ~() {
 	r^=256;
 	g^=256;
 	b^=256;

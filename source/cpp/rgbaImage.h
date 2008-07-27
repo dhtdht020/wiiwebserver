@@ -12,7 +12,7 @@ public:
 	class pixel {
 	public:
 		u8 r,g,b,a;
-		void operator!(void);
+		void operator~(void);
 		bool operator!=(const pixel&);
 		bool operator==(const pixel&);
 

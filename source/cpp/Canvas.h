@@ -30,7 +30,7 @@ public:
 	void floodFill(const unsigned int x, const unsigned int y, const pixel &p);
 	void clear(const pixel &p);
 
-	void operator!(void);
+	void operator~(void);
 
 	void flush(void);
 

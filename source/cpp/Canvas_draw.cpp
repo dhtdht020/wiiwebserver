@@ -7,13 +7,13 @@ void Canvas::hline(const unsigned int x1, const unsigned int x2, const unsigned 
 	XLOOP {
 		operator()(xi,y)=p;
 	}
-}
+};
 
 void Canvas::vline(const unsigned int x, const unsigned int y1, const unsigned int y2, const rgbaImage::pixel &p) {
 	YLOOP {
 		operator()(x,yi)=p;
 	}
-}
+};
 
 void Canvas::filledRect(const unsigned int x1, const unsigned int x2, const unsigned int y1, const unsigned int y2, const rgbaImage::pixel &p) {
 	YLOOP {
@@ -23,10 +23,10 @@ void Canvas::filledRect(const unsigned int x1, const unsigned int x2, const unsi
 	}
 };
 
-void Canvas::operator !(void) {
+void Canvas::operator ~(void) {
 	for(unsigned int iy=GetHeight();iy>0;iy--) {
 		for(unsigned int ix=GetWidth();ix>0;ix--) {
-			!operator()(ix-1,iy-1);
+			~operator()(ix-1,iy-1);
 		}
 	}
 };
