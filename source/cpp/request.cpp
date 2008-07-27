@@ -9,6 +9,9 @@ extern "C" {
 #include <network.h>
 }
 
+#include "InternalFile.h"
+
+extern InternalFile epicFail;
 
 Request::Request(Client *c) : client(c),cacheControll() {//the constructor for the class
 };
@@ -24,19 +27,23 @@ void Request::doRequest() {
 		} else {
 
 			try {
-				resource=Resource::load(resourceName);
+				try {
+					resource=Resource::load(resourceName);
 
 
 
-			} catch (const NonExistantResource &) {
-				loadErrorReply(404);
-			} catch (const InvalidRequestMethod &) {
-				loadErrorReply(405);
-				resource->setAllowHeader(*this);
-			} catch (const AuthorizationRequired &) {
-				loadErrorReply(401);
-			} catch (const ForbiddenResource &) {
-				loadErrorReply(403);
+				} catch (const NonExistantResource &) {
+					loadErrorReply(404);
+				} catch (const InvalidRequestMethod &) {
+					loadErrorReply(405);
+					resource->setAllowHeader(*this);
+				} catch (const AuthorizationRequired &) {
+					loadErrorReply(401);
+				} catch (const ForbiddenResource &) {
+					loadErrorReply(403);
+				}
+			} catch (const NonExistantResource &) {//in case the error page couldn't be found
+				resource = new InternalFile(InternalFile::epicFail);
 			}
 
 		}
@@ -111,10 +118,6 @@ void Request::doRequest() {
 Request::CacheControll::CacheControll() : cacheMode(PUBLIC),mustRevalidate(false),noTransform(false) {
 };
 
-void Request::readRequest() {
-	readRequestHeaders();
-};
-
 void Request::readRequestHeaders() {
 };
 
@@ -148,4 +151,14 @@ Request::~Request() {
 	if(resource) {
 		delete resource;
 	}
+}
+
+void Request::readRequest() {
+	//read the status line here
+	readRequestHeaders();
+
+	if(requestMethod=="POST") {
+		//read request body
+	}
+
 }

@@ -18,6 +18,8 @@ public:
 	virtual void loadBuffer(string &outBuffer)=0;
 	virtual void loadBuffer(string &outBuffer,unsigned int minPos,unsigned int maxPos)=0;
 
+	string mimeType;
+
 private:
 	Resource(const Resource &);
 	Resource &operator=(const Resource &);

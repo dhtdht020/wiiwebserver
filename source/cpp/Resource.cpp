@@ -16,7 +16,7 @@ Resource *Resource::load(std::string name) {
 	size_t errorLocation=name.find(errorPrefix);
 	if(errorLocation==0) {
 		//todo, add user customable error pages
-		realLocation=name.replace(errorLocation,errorPrefix.length(),"builtin:");
+		realLocation="builtin:/errors/"+name.substr(errorPrefix.length());
 	}
 
 	string builtinPrefix("builtin:");
@@ -24,7 +24,7 @@ Resource *Resource::load(std::string name) {
 	if(builtinLocation==0) {
 		string internalFile=realLocation.substr(builtinPrefix.length());
 
-		return new InternalFile(internalFile);
+		return InternalFile::load(internalFile);
 	}
 
 	//ops, we ran out of resource locations, time to throw!
