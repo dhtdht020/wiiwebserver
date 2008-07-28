@@ -7,10 +7,14 @@ extern "C" {
 #include "configuration.h"
 #include "display.h"
 #include "listeningSocket.h"
+#include "globals.h"
+#include "debug.h"
 
 void waitForAllThreadsToEnd();
 
 void loadInternalFiles();
+
+void initConsole();
 
 int main() {
 	fatInitDefault();
@@ -18,14 +22,30 @@ int main() {
 
 	loadConfiguration();
 
+#ifndef USE_CONSOLE
 	startDisplayThread();
+#else
+	initConsole();
+#endif
+	CONLOG("console ready for use");
 
 #ifndef GUI_ONLY_TEST
+	CONLOG("init fat");
 	loadInternalFiles();
 
-	setupListeningSocket();
+	try {
+		CONLOG("init listen");
+		setupListeningSocket();
+		listenstatus=OK;
 
-	startListeningThread();
+		CONLOG("launch listen");
+		startListeningThread();
+	} catch (const listenFailure &) {
+		listenstatus=ERROR;
+		CONLOG("listen init fail");
+	}
+
+
 #endif
 	
 	waitForAllThreadsToEnd();

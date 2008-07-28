@@ -8,6 +8,7 @@ extern "C" {
 }
 
 #include "Client.h"
+#include "debug.h"
 
 typedef s32 SOCKET;
 
@@ -18,11 +19,16 @@ void setupListeningSocket(void) {
 
 	s32 s32Success;
 
+	CONLOG("init network");
+
 	do {
+		CONLOG("try");
 		s32Success=net_init();
 	} while (s32Success==-EAGAIN);
 
 	if(s32Success<0) throw listenFailure();
+
+	CONLOG("create socket");
 
 	listenSocket=net_socket(AF_INET, SOCK_STREAM, 0);
 
@@ -30,14 +36,20 @@ void setupListeningSocket(void) {
 
 	struct sockaddr_in sa;
 
+	CONLOG("init sockaddr");
+
 	memset(&sa, 0, sizeof(struct sockaddr_in)); /* clear our address */
 	sa.sin_family= AF_INET;              
 	sa.sin_port= htons(80);         /* this is our port number */
 	sa.sin_addr.s_addr = INADDR_ANY;/* this is our host address */
 
+	CONLOG("bind");
+
 	s32Success=net_bind(listenSocket,(struct sockaddr*)&sa, sizeof(sa));
 
 	if(s32Success<0) throw listenFailure();
+
+	CONLOG("listen");
 
 	s32Success=net_listen(listenSocket,1);
 
@@ -47,7 +59,9 @@ void setupListeningSocket(void) {
 }
 
 void *Listen(void*) {
+	CONLOG("Listen thread");
 	while(listenForConnections) {
+		CONLOG("wait con");
 		struct sockaddr_in sa;
 		size_t saLenght = sizeof(sa);
 
@@ -59,10 +73,14 @@ void *Listen(void*) {
 
 		if(numIncomming>0) {
 
+			CONLOG("con found");
+			CONLOG("con accept");
+
 			SOCKET clientSocket;
 			clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
 
 			if(clientSocket!=INVALID_SOCKET) {
+				CONLOG("con accepted");
 				Client *c=new Client(clientSocket);
 				c->startThread();
 				clients.push_back(c);

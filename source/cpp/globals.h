@@ -23,4 +23,8 @@ class Client;
 
 extern list<Client *> clients;
 
+enum ListenStatus { UNINITALIZED, OK, ERROR };
+
+extern volatile ListenStatus listenstatus;
+
 

@@ -9,8 +9,12 @@ extern "C" {
 
 
 void waitForAllThreadsToEnd(void) {
-	LWP_JoinThread(displayThread,NULL);
+	if(LWP_THREAD_NULL!=displayThread) {
+		LWP_JoinThread(displayThread,NULL);
+	}
 #ifndef GUI_ONLY_TEST
-	LWP_JoinThread(listenThread,NULL);
+	if(LWP_THREAD_NULL!=listenThread) {
+		LWP_JoinThread(listenThread,NULL);
+	}
 #endif
 }
