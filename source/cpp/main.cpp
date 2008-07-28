@@ -20,11 +20,13 @@ int main() {
 
 	startDisplayThread();
 
+#ifndef GUI_ONLY_TEST
 	loadInternalFiles();
 
 	setupListeningSocket();
 
 	startListeningThread();
+#endif
 	
 	waitForAllThreadsToEnd();
 

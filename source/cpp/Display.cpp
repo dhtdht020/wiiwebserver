@@ -26,7 +26,8 @@ void *Display(void*) {
 	t.clear(rgbaImage::pixel(0,255,255));
 	t.vline(0 ,0 ,99,rgbaImage::pixel(0,255,0));
 	t.vline(59,0 ,99,rgbaImage::pixel(0,255,0));
-	t.hline(1 ,58,49,rgbaImage::pixel(0,255,0));
+	t.hline(1 ,59,49,rgbaImage::pixel(0,255,0));
+	t.floodFill(20,5,rgbaImage::pixel(255,0,0));
 	t.flush();
 
 	Sprite t_sprite;
