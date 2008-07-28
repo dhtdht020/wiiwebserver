@@ -11,7 +11,7 @@ void Canvas::tryToAdd(set<position> &open,bool *closed,const pixel &p,signed int
 	if(pos.y+1==GetHeight() && yOffset>0) return;
 
 	//we definitly shouldn't add stuff we checked already
-	if(closed[pos.x+pos.y*GetWidth()]) return;
+	if(closed[(pos.x+xOffset)+(pos.y+yOffset)*GetWidth()]) return;
 
 	pixel p2=operator()(pos.x+xOffset,pos.y+yOffset);
 
