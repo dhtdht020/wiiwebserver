@@ -31,7 +31,8 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 	bool *closed=new bool[GetHeight()*GetWidth()];
 
 	while(!open.empty()) {
-		const position& pos=*(open.begin());
+		const set<position>::const_iterator itr=open.begin();
+		const position& pos=*itr;
 
 		closed[pos.x+pos.y*GetWidth()]=true;
 
@@ -42,7 +43,7 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 
 		operator()(pos.x,pos.y)=p;
 
-		open.erase(pos);
+		open.erase(itr);
 	}
 	delete[] closed;
 }
