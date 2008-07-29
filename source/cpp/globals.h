@@ -14,14 +14,14 @@ using std::string;
 
 extern bool volatile serverOffline;
 extern bool volatile listenForConnections;
-extern string serverName;
+extern const string serverName;
 
 extern lwp_t displayThread;
 extern lwp_t listenThread;
 
 class Client;
 
-extern list<Client *> clients;
+extern volatile list<Client *> clients;
 
 enum ListenStatus { UNINITALIZED, OK, ERROR };
 
