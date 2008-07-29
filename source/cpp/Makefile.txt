@@ -15,9 +15,9 @@ INCLUDE := -isystem $(boostpath) -isystem $(LIBOGC_INC) \
 warnings = -Wchar-subscripts -Wcomment -Wformat -Wformat-security \
  -Wmissing-braces -Wparentheses -Wsequence-point -Wreturn-type -Wunused-value \
  -Wswitch -Wtrigraphs -Wunused-function -Wunused-variable -Wunused-parameter \
- -Wunused-label -Wuninitialized -Wfloat-equal -Wshadow \
+ -Wunused-label -Wfloat-equal -Wshadow \
  -Wlarger-than-10000 -Wcast-qual -Wcast-align -Wsign-compare \
- -Wredundant-decls
+ -Wredundant-decls #-Wuninitialized
  
 cwarnings = $(warnings) -Wnonnull -Wimplicit-int -Werror-implicit-function-declaration -Wmain \
 	 -Wtraditional  -Wbad-function-cast -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
@@ -27,7 +27,7 @@ cppwarnings = $(warnings) -Woverloaded-virtual -Wctor-dtor-privacy
 
 optimizations = -fno-guess-branch-probability -ffast-math
 
-COMMONCOMPILEFLAGS = -g -O2 -mrvl $(optimizations) $(MACHDEP) $(INCLUDE) -Werror -fexceptions -ftabstop=2
+COMMONCOMPILEFLAGS = -g -mrvl $(optimizations) $(MACHDEP) $(INCLUDE) -Werror -fexceptions -ftabstop=2
 
 CFLAGS	= $(COMMONCOMPILEFLAGS) $(cwarnings)
 CXXFLAGS	= $(COMMONCOMPILEFLAGS) $(cppwarnings) -ffor-scope
