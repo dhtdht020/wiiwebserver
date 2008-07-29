@@ -17,14 +17,14 @@ void Client::startThread() {
 
 int Client::run() {
 	for(;;) {
-		fd_set readfds; FD_SET(socket, &readfds);
-		int result = net_select(socket,&readfds,0,0,0);
-		if(result <0) {
-			break;
-		} else {
+	
+		try {
 			Request r(this);
 			r.doRequest();
+		} catch (...) {
+			break;
 		}
+	
 	}
 	return 0;
 }
