@@ -13,20 +13,21 @@ extern "C" {
 
 extern InternalFile epicFail;
 
-Request::Request(Client *c) : client(c),cacheControll() {//the constructor for the class
+Request::Request(Client *c) : client(c),cacheControll(),resource(NULL) {//the constructor for the class
 };
 
 void Request::doRequest() {
 	try {
-		readRequest();
+		try {
+			readRequest();
 
-		if(requestMethod!="GET" && requestMethod!="HEAD" && requestMethod!="POST") {
-			loadErrorReply(501);
-		} else if(serverOffline) {
-			loadErrorReply(503);
-		} else {
+			if(requestMethod!="GET" && requestMethod!="HEAD" && requestMethod!="POST") {
+				loadErrorReply(501);
+			} else if(serverOffline) {
+				loadErrorReply(503);
+			} else {
 
-			try {
+				
 				try {
 					resource=Resource::load(resourceName);
 
@@ -42,14 +43,16 @@ void Request::doRequest() {
 				} catch (const ForbiddenResource &) {
 					loadErrorReply(403);
 				}
-			} catch (const NonExistantResource &) {//in case the error page couldn't be found
-				resource = new InternalFile(InternalFile::epicFail);
+
+
 			}
 
+		} catch (const InvalidRequest &) {
+			loadErrorReply(400);
 		}
 
-	} catch (const InvalidRequest &) {
-		loadErrorReply(400);
+	} catch (const NonExistantResource &) {//in case the error page couldn't be found
+		resource = new InternalFile(InternalFile::epicFail);
 	}
 
 #if 0
@@ -87,7 +90,7 @@ void Request::doRequest() {
 	replyHeaders["Content-lenght"]=boost::lexical_cast<std::string>(replyBody.length());
 	replyHeaders["Server"]=serverName;
 
-		map<string,string>::iterator requestHeaderIter;
+	map<string,string>::iterator requestHeaderIter;
 
 	bool mustClose= httpVersion.minor<1;
 
@@ -131,7 +134,7 @@ void Request::loadErrorReply(const unsigned int replyNumber_p) {
 }
 
 void Request::sendReply() {
-	sendReplyHeaders();
+	//sendReplyHeaders();
 
 	if(requestMethod!="HEAD") {
 
@@ -155,6 +158,12 @@ Request::~Request() {
 
 void Request::readRequest() {
 	//read the status line here
+
+	requestMethod="GET";
+	this->httpVersion.major=1;
+	this->httpVersion.minor=0;
+	this->resourceName="/";
+
 	readRequestHeaders();
 
 	if(requestMethod=="POST") {
