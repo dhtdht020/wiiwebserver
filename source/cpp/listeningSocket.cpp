@@ -5,6 +5,7 @@
 extern "C" {
 #include <network.h>
 #include <errno.h>
+#include <fcntl.h>
 }
 
 #include "Client.h"
@@ -47,6 +48,10 @@ void setupListeningSocket(void) {
 
 	s32Success=net_bind(listenSocket,(struct sockaddr*)&sa, sizeof(sa));
 
+	s32 t =net_fcntl(listenSocket,F_GETFL, 0);
+	t |= O_NONBLOCK;
+	net_fcntl(listenSocket, F_SETFL, t);
+
 	if(s32Success<0) throw listenFailure();
 
 	CONLOG("listen");
@@ -66,25 +71,16 @@ void *Listen(void*) {
 		size_t saLenght = sizeof(sa);
 
 
-		fd_set listenset;
-		FD_ZERO(&listenset);
-		FD_SET(listenSocket,&listenset);
-		int numIncomming = net_select(1,&listenset,0,0,0);
+		CONLOG("con accept");
 
-		if(numIncomming>0) {
+		SOCKET clientSocket;
+		clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
 
-			CONLOG("con found");
-			CONLOG("con accept");
-
-			SOCKET clientSocket;
-			clientSocket=net_accept(listenSocket,(sockaddr*)&sa,&saLenght);
-
-			if(clientSocket!=INVALID_SOCKET) {
-				CONLOG("con accepted");
-				Client *c=new Client(clientSocket);
-				c->startThread();
-				clients.push_back(c);
-			}
+		if(clientSocket!=INVALID_SOCKET) {
+			CONLOG("con accepted");
+			Client *c=new Client(clientSocket);
+			c->startThread();
+			clients.push_back(c);
 		}
 	}
 	return (void*)0;
