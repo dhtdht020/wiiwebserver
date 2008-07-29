@@ -21,7 +21,7 @@ extern lwp_t listenThread;
 
 class Client;
 
-extern volatile list<Client *> clients;
+extern list<Client *> clients;
 
 enum ListenStatus { UNINITALIZED, OK, ERROR };
 
