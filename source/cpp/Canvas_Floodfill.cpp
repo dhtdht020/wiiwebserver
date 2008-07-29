@@ -30,6 +30,12 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 
 	bool *closed=new bool[GetHeight()*GetWidth()];
 
+	for(unsigned int iy=0;GetHeight()>iy;iy++) {
+		for(unsigned int ix=0;GetWidth()>ix;ix++) {
+			closed[iy*GetWidth()+ix]=false;
+		}
+	}
+
 	while(!open.empty()) {
 		const set<position>::const_iterator itr=open.begin();
 		const position& pos=*itr;
