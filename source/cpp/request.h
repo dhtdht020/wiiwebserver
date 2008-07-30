@@ -35,6 +35,7 @@ private:
 	string requestBody;
 
 	unsigned int replyNumber;
+	string replyReason;
 	map<string,string> replyHeaders;
 	string replyBody;
 

@@ -21,6 +21,13 @@ void Request::doRequest() {
 		try {
 			readRequest();
 
+			if(httpVersion.major>1) {
+				httpVersion.major=1;
+				httpVersion.minor=1;
+			} else if(httpVersion.minor>1) {
+				httpVersion.minor=1;
+			}
+
 			if(requestMethod!="GET" && requestMethod!="HEAD" && requestMethod!="POST") {
 				loadErrorReply(501);
 			} else if(serverOffline) {
@@ -134,10 +141,19 @@ void Request::loadErrorReply(const unsigned int replyNumber_p) {
 }
 
 void Request::sendReply() {
-	//sendReplyHeaders();
+
+	string replyLine("HTTP/");
+	replyLine+=boost::lexical_cast<string>(httpVersion.major)+".";
+	replyLine+=boost::lexical_cast<string>(httpVersion.minor)+" ";
+	replyLine+=boost::lexical_cast<string>(replyNumber)+" ";
+	replyLine+=replyReason+"\n\r";
+
+	net_send(client->socket,replyLine.c_str(),replyLine.length(),0);
+
+	sendReplyHeaders();
 
 	if(requestMethod!="HEAD") {
-
+		net_send(client->socket,replyBody.c_str(),replyBody.length(),0);
 
 	}
 };
