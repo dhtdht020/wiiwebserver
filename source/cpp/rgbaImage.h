@@ -23,6 +23,7 @@ public:
 
 protected:
 	rgbaImage::pixel &operator() (const unsigned int x, const unsigned int y);
+	rgbaImage::pixel &getpixel(const unsigned int x, const unsigned int y);
 	pixel *_RGBApixels;
 	void _Flush();
 private:

@@ -61,8 +61,6 @@ void *Display(void*) {
 
 	}
 
-	gwd.StopVideo();
-
 	listenForConnections=false;
 
 	return (void*)0;

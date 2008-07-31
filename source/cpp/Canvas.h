@@ -26,6 +26,7 @@ public:
 	void vline(const unsigned int x,const unsigned int y1, const unsigned int y2,const pixel &p);
 	//non constnes is not accidental
 	void simple45line(unsigned int x,unsigned int y, const unsigned int lenght,bool up);
+	void BresenhamLine(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, const pixel &p);
 	void filledRect(const unsigned int x1, const unsigned int x2, const unsigned int y1, const unsigned int y2, const pixel &p);
 	void floodFill(const unsigned int x, const unsigned int y, const pixel &p);
 	void clear(const pixel &p);

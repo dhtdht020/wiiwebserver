@@ -13,7 +13,7 @@ void Canvas::tryToAdd(set<position> &open,bool *closed,const pixel &p,signed int
 	//we definitly shouldn't add stuff we checked already
 	if(closed[(pos.x+xOffset)+(pos.y+yOffset)*GetWidth()]) return;
 
-	pixel p2=operator()(pos.x+xOffset,pos.y+yOffset);
+	pixel p2=getpixel(pos.x+xOffset,pos.y+yOffset);
 
 	if(p2!=p) return;
 
@@ -26,7 +26,7 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 	set<position> open;
 	open.insert(position(x,y));
 
-	pixel basepixel=operator()(x,y);
+	pixel basepixel=getpixel(x,y);
 
 	bool *closed=new bool[GetHeight()*GetWidth()];
 
@@ -47,7 +47,7 @@ void Canvas::floodFill(unsigned int x, unsigned int y, const pixel &p) {
 		tryToAdd(open,closed,basepixel,-1,0,pos);
 		tryToAdd(open,closed,basepixel,1,0,pos);
 
-		operator()(pos.x,pos.y)=p;
+		getpixel(pos.x,pos.y)=p;
 
 		open.erase(itr);
 	}

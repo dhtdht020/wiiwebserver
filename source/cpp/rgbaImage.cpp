@@ -8,7 +8,7 @@ rgbaImage::rgbaImage(const unsigned int width, const unsigned int height) {
 rgbaImage::~rgbaImage(void) {
 };
 
-rgbaImage::pixel &rgbaImage::operator ()(const unsigned int x, const unsigned int y) {
+rgbaImage::pixel &rgbaImage::getpixel(const unsigned int x, const unsigned int y) {
 	return _RGBApixels[x+y*GetWidth()];
 };
 
