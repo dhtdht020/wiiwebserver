@@ -28,6 +28,7 @@ void *Display(void*) {
 	t.vline(59,0 ,99,rgbaImage::pixel(0,255,0));
 	t.hline(1 ,59,49,rgbaImage::pixel(0,255,0));
 	t.floodFill(20,5,rgbaImage::pixel(255,0,0));
+	t.BresenhamLine(5,5,30,20,rgbaImage::pixel(255,255/2,0));
 	t.flush();
 
 	Sprite t_sprite;
