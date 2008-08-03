@@ -1,5 +1,6 @@
 #include "Client.h"
 #include "request.h"
+#include "buildconfig.h"
 
 extern "C" {
 #include <network.h>
@@ -12,7 +13,11 @@ Client::~Client(void) {
 };
 
 void Client::startThread() {
+#ifndef NO_CLIENT_THREADS
 	LWP_CreateThread(&thread,objectRun<Client>,(void *)this,NULL,NULL,1);
+#else
+	this->run();
+#endif
 };
 
 int Client::run() {

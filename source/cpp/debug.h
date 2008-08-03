@@ -6,6 +6,8 @@ extern "C" {
 #include <stdio.h>
 }
 
+#include "buildconfig.h"
+
 #ifdef USE_CONSOLE
 #define CONLOG(x) printf("%s",x)
 #else
