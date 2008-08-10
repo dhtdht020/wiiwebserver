@@ -51,10 +51,11 @@ private://methods that we DONT want but are forced to have,
 	void sendReply(void);
 	void sendReplyHeaders(void);
 
+	void setDefaultReplyReason(void);
 
 	bool locateAndLoadResource(void);
 
-	void loadErrorReply(unsigned int replyNumber);
+	void loadErrorReply(unsigned int replyNumber,const string &reason);
 
 	//now for the flow control members
 	bool requestExists;
