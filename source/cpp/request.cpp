@@ -29,9 +29,9 @@ void Request::doRequest() {
 			}
 
 			if(requestMethod!="GET" && requestMethod!="HEAD" && requestMethod!="POST") {
-				loadErrorReply(501);
+				loadErrorReply(501,"Method not supported");
 			} else if(serverOffline) {
-				loadErrorReply(503);
+				loadErrorReply(503,"Server offline");
 			} else {
 
 				
@@ -41,21 +41,21 @@ void Request::doRequest() {
 
 
 				} catch (const NonExistantResource &) {
-					loadErrorReply(404);
+					loadErrorReply(404,"Not Found");
 				} catch (const InvalidRequestMethod &) {
-					loadErrorReply(405);
+					loadErrorReply(405,"Method Not Allowed");
 					resource->setAllowHeader(*this);
 				} catch (const AuthorizationRequired &) {
-					loadErrorReply(401);
+					loadErrorReply(401,"Unauthorized");
 				} catch (const ForbiddenResource &) {
-					loadErrorReply(403);
+					loadErrorReply(403,"Forbidden");
 				}
 
 
 			}
 
 		} catch (const InvalidRequest &) {
-			loadErrorReply(400);
+			loadErrorReply(400,"Bad request");
 		}
 
 	} catch (const NonExistantResource &) {//in case the error page couldn't be found
@@ -91,7 +91,6 @@ void Request::doRequest() {
 #else
 	replyHeaders["Accept-Ranges"]="none";
 #endif
-
 
 	//lastminute header work, stuff that directly relates to the final request body
 	replyHeaders["Content-lenght"]=boost::lexical_cast<std::string>(replyBody.length());
@@ -131,8 +130,9 @@ Request::CacheControll::CacheControll() : cacheMode(PUBLIC),mustRevalidate(false
 void Request::readRequestHeaders() {
 };
 
-void Request::loadErrorReply(const unsigned int replyNumber_p) {
+void Request::loadErrorReply(const unsigned int replyNumber_p,const string &reason_p) {
 	replyNumber=replyNumber_p;
+	replyReason=reason_p;
 	if(resource) {
 		delete resource;
 	}
