@@ -310,7 +310,7 @@ void _404(client_t *client, char* forcd)
 	client->http10.status="Not Found";
 	client->http11.status="Not Found";
 	
-		if ((strcmp(forcd,"yes")==0))
+	if ((strcmp(forcd,"yes")==0))
 	{
 		client->contlength=_404_html_size;
 		client->mimetype="text/html";
@@ -321,7 +321,6 @@ void _404(client_t *client, char* forcd)
 		VIDEO_WaitVSync();
 		set_blocking(client->socket,false);
 		net_close(client->socket);
-		printf("\r\n404 1\r\n");
 	}
 	else
 	{
@@ -336,7 +335,6 @@ void _404(client_t *client, char* forcd)
 			VIDEO_WaitVSync();
 			set_blocking(client->socket,false);
 			net_close(client->socket);
-			printf("\r\n404 2\r\n");
 		}
 		else
 		{
@@ -390,7 +388,6 @@ void _404(client_t *client, char* forcd)
 				LWP_MutexUnlock (aMutex);
 				set_blocking(client->socket,false);
 				net_close(client->socket);
-				printf("\r\n404 3\r\n");
 			}
 			else
 			{
@@ -403,7 +400,6 @@ void _404(client_t *client, char* forcd)
 				VIDEO_WaitVSync();
 				set_blocking(client->socket,false);
 				net_close(client->socket);
-				printf("\r\n404 4\r\n");
 			}
 		}
 	}
