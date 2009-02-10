@@ -83,7 +83,7 @@ s32 netSocket;
 char* servver="0.91";
 
 // Settings file path
-char* settingsfile = "sd:/data/settings/wiiweb.xml";
+//char* settingsfile = "sd:/data/settings/wiiweb.xml";
 // Inits 404
 char* c_404="nofile";    // Custom 404 file path
 // Inits 500
@@ -91,8 +91,8 @@ char* c_500="nofile";    // Custom 500 file path
 // Inits denied
 char* c_denied="nofile"; // Custom denied file path
 // RAM based error 500 page
-char* ram_500;
-int ram_500_size;
+//char* ram_500;
+//int ram_500_size;
 void sdpage(client_t *client);
 void _500(client_t *client,char* forcd, bool rampage);
 char* password;
