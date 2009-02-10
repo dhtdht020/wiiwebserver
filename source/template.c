@@ -68,8 +68,6 @@ are any faults please contact me and i'll be glad to make any necessary correcti
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 
-int kbdfd=0;
-
 static u32 aMutex = 0;
 lwp_t serverT;
 #define THREADSTACK 8192
@@ -323,7 +321,6 @@ void _404(client_t *client, char* forcd)
 		VIDEO_WaitVSync();
 		set_blocking(client->socket,false);
 		net_close(client->socket);
-		printf("\r\n404 1\r\n");
 	}
 	else
 	{
@@ -338,7 +335,7 @@ void _404(client_t *client, char* forcd)
 			VIDEO_WaitVSync();
 			set_blocking(client->socket,false);
 			net_close(client->socket);
-			printf("\r\n404 2\r\n");
+			return;
 		}
 		else
 		{
@@ -392,7 +389,6 @@ void _404(client_t *client, char* forcd)
 				LWP_MutexUnlock (aMutex);
 				set_blocking(client->socket,false);
 				net_close(client->socket);
-				printf("\r\n404 3\r\n");
 			}
 			else
 			{
@@ -405,7 +401,6 @@ void _404(client_t *client, char* forcd)
 				VIDEO_WaitVSync();
 				set_blocking(client->socket,false);
 				net_close(client->socket);
-				printf("\r\n404 4\r\n");
 			}
 		}
 	}
@@ -432,17 +427,19 @@ void sdpage(client_t *client)
 	
 	if (strstr(client->httpreq.path, "./") || strstr(client->httpreq.path, "../")) 
 	{
-		printf("\r\n404 1\r\n");
 		_404(client,"no");
 		set_blocking(client->socket,false);
+		LWP_MutexUnlock (aMutex);
+		net_close(client->socket);
 		return;
 	}
 	
 	if (strstr(client->httpreq.path, "wiiweb")) 
 	{
-		printf("\r\n404 2\r\n");
 		_404(client,"no");
 		set_blocking(client->socket,false);
+		LWP_MutexUnlock (aMutex);
+		net_close(client->socket);
 		return;
 	}
 
@@ -485,6 +482,8 @@ void sdpage(client_t *client)
 			fclose(pFile); 
 			_500(client, "no", 1); 
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
+			net_close(client->socket);
 			return;
 		}
 		result = fread (buffer,1,lSize,pFile);
@@ -494,6 +493,8 @@ void sdpage(client_t *client)
 			fclose(pFile); 
 			_500(client, "no", 1); 
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
+			net_close(client->socket);
 			return;
 		}
 		fclose (pFile); 
@@ -506,9 +507,10 @@ void sdpage(client_t *client)
 		else
 		{
 			fclose (pFile);
-			printf("\r\n404 3\r\n");
 			_404(client,"no");
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
+			net_close(client->socket);
 			return;
 		}
 	}
@@ -535,6 +537,8 @@ void sdpage(client_t *client)
 			fclose (pFile);
 			_500(client,"no", 1);
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
+			net_close(client->socket);
 			return;
 		}
 	}
@@ -549,6 +553,8 @@ void sdpage(client_t *client)
 			fclose (pFile);
 			_500(client,"no", 1);
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
+			net_close(client->socket);
 			return;
 		}
 	}
