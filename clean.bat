@@ -1,2 +1,0 @@
-@ECHO off
-make clean
