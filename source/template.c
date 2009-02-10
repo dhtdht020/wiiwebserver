@@ -568,7 +568,7 @@ void sdpage(client_t *client)
 	
 	headersend(client);
 	
-	s32 sent = 0;
+	s32 sent = 1;
 	
 	//printf(filecontent);
 	//printf("\n");
@@ -579,9 +579,13 @@ void sdpage(client_t *client)
 	else
 	{
 		sent = write_exact(client->socket, filecontent, client->contlength);
+		while(!(sent == 0))
+		{
+			sent = write_exact(client->socket, filecontent, client->contlength);
+		}
 	}
 
-	sleep(2);
+	//sleep(2);
 	printf("Sent\n");
 	LWP_MutexUnlock (aMutex);
 	set_blocking(client->socket,false);
