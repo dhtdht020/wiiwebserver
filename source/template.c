@@ -197,6 +197,7 @@ void favicon(client_t *client)
 	usleep(200000);
 	VIDEO_WaitVSync();
 	set_blocking(client->socket,false);
+	LWP_MutexUnlock (aMutex);
 	net_close(client->socket);
 	return;
 }
@@ -208,7 +209,7 @@ void _500(client_t *client,char* forcd, bool rampage)
 	client->http11.statuscode="500";
 	client->http10.status="Internal Server Error";
 	client->http11.status="Internal server Error";
-	if ((rampage==1))
+	if ((strcmp(forcd,"yes")==0))
 	{
 		client->contlength=_500_html_size;
 		client->mimetype="text/html";
@@ -218,18 +219,7 @@ void _500(client_t *client,char* forcd, bool rampage)
 		usleep(200000);
 		VIDEO_WaitVSync();
 		set_blocking(client->socket,false);
-		net_close(client->socket);
-	}
-	else if ((strcmp(forcd,"yes")==0))
-	{
-		client->contlength=_500_html_size;
-		client->mimetype="text/html";
-		headersend(client);
-		net_write(client->socket, _500_html, _500_html_size);
-		printf("Sent\n");
-		usleep(200000);
-		VIDEO_WaitVSync();
-		set_blocking(client->socket,false);
+		LWP_MutexUnlock (aMutex);
 		net_close(client->socket);
 	}
 	else
@@ -244,6 +234,7 @@ void _500(client_t *client,char* forcd, bool rampage)
 			usleep(200000);
 			VIDEO_WaitVSync();
 			set_blocking(client->socket,false);
+			LWP_MutexUnlock (aMutex);
 			net_close(client->socket);
 		}
 		else
@@ -281,8 +272,8 @@ void _500(client_t *client,char* forcd, bool rampage)
 				printf("Sent\n");
 				sleep(1);
 				VIDEO_WaitVSync();
-				LWP_MutexUnlock (aMutex);
 				set_blocking(client->socket,false);
+				LWP_MutexUnlock (aMutex);
 				net_close(client->socket);
 				return;
 			}
@@ -296,6 +287,7 @@ void _500(client_t *client,char* forcd, bool rampage)
 				usleep(200000);
 				VIDEO_WaitVSync();
 				set_blocking(client->socket,false);
+				LWP_MutexUnlock (aMutex);
 				net_close(client->socket);
 			}
 		}
@@ -357,6 +349,9 @@ void _404(client_t *client, char* forcd)
 					fclose(pFile); 
 					_500(client, "no", 1); 
 					set_blocking(client->socket,false);
+					set_blocking(client->socket,false);
+					LWP_MutexUnlock (aMutex);
+					net_close(client->socket);
 					return;
 				}
 				result = fread (buffer,1,lSize,pFile);
@@ -366,6 +361,8 @@ void _404(client_t *client, char* forcd)
 					fclose(pFile); 
 					_500(client, "no", 1); 
 					set_blocking(client->socket,false);
+					LWP_MutexUnlock (aMutex);
+					net_close(client->socket);
 					return;
 				}
 				fclose (pFile); 
@@ -412,7 +409,7 @@ void sdpage(client_t *client)
 	char* origpath = client->httpreq.path;
 	int pathlen = strlen(origpath);
 	
-	printf("\nLength : %d\n",pathlen);
+	printf("Length : %d\n",pathlen);
 	
 	if ((strcmp(client->httpreq.path,"/")==0))
 	{
@@ -579,13 +576,9 @@ void sdpage(client_t *client)
 	else
 	{
 		sent = write_exact(client->socket, filecontent, client->contlength);
-		while(!(sent == 0))
-		{
-			sent = write_exact(client->socket, filecontent, client->contlength);
-		}
 	}
 
-	//sleep(2);
+	sleep(2);
 	printf("Sent\n");
 	LWP_MutexUnlock (aMutex);
 	set_blocking(client->socket,false);
