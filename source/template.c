@@ -54,6 +54,7 @@ are any faults please contact me and i'll be glad to make any necessary correcti
 #include <mxml.h>
 #include <ogc/mutex.h>
 #include <fcntl.h>
+#include <sys/dir.h>
 //#include <kbd.h>
 
 //Built in Files
@@ -78,7 +79,7 @@ lwpq_t ThreadOneQ;
 s32 netSocket;
 
 // Current server version
-char* servver="0.91";
+char* servver="0.92";
 
 // Settings file path
 //char* settingsfile = "sd:/data/settings/wiiweb.xml";
@@ -406,22 +407,27 @@ void _404(client_t *client, char* forcd)
 void sdpage(client_t *client)
 {
 	char* filecontent = "TEST";
-	char* origpath = client->httpreq.path;
+	char* origpath = malloc(1000);
+	strcpy(origpath, client->httpreq.path);
 	int pathlen = strlen(origpath);
 	
 	printf("Length : %d\n",pathlen);
 	
-	if ((strcmp(client->httpreq.path,"/")==0))
+	if ((origpath[pathlen-1] == '/'))
 	{
-		client->httpreq.path="/index.html";
+		printf("Last char is a slash\n");
+		//char* origver = "";
+		//printf("%s\r\n",client->httpreq.httpver);
+		strcat(origpath, "index.html");
+		//printf("%s\r\n",client->httpreq.httpver);
 	}
 	
-	if ((strcmp(client->httpreq.path, "/index")==0))
+	if ((strcmp(origpath, "/index")==0))
 	{
-		strcat(client->httpreq.path, ".html");
+		strcat(origpath, ".html");
 	}
 	
-	if (strstr(client->httpreq.path, "./") || strstr(client->httpreq.path, "../")) 
+	if (strstr(origpath, "./") || strstr(origpath, "../")) 
 	{
 		_404(client,"no");
 		set_blocking(client->socket,false);
@@ -430,7 +436,7 @@ void sdpage(client_t *client)
 		return;
 	}
 	
-	if (strstr(client->httpreq.path, "wiiweb")) 
+	if (strstr(origpath, "wiiweb")) 
 	{
 		_404(client,"no");
 		set_blocking(client->socket,false);
@@ -442,7 +448,7 @@ void sdpage(client_t *client)
 	char* space_tok= "";
 	char* space_replace = "";
 	
-	space_tok = strtok (client->httpreq.path,"%20");
+	space_tok = strtok (origpath,"%20");
 	space_replace = space_tok;
 	while (space_tok != NULL) 
 	{
@@ -453,15 +459,44 @@ void sdpage(client_t *client)
 			strcat(space_replace, space_tok);
 		}
 	}
-	client->httpreq.path = space_replace;
+	origpath = space_replace;
 	
 	char path[100] = "sd:/data/web";
-	strcat(path,client->httpreq.path);
+	
+	if((origpath[1] == 'u') && (origpath[2] == 's') && (origpath[3] == 'b'))
+	{
+		strcpy(path, "usb:/data/web");
+		int i;
+		for(i=0; i < strlen(origpath) - 4; i++)
+		{
+			origpath[i] = origpath[i+4];
+		}
+		int origpathlen = strlen(origpath);
+		origpath[origpathlen-1] = '\0';
+		origpath[origpathlen-2] = '\0';
+		origpath[origpathlen-3] = '\0';
+		origpath[origpathlen-4] = '\0';
+		strcat(path,origpath);
+	}
+	else
+	{
+		strcat(path,origpath);
+	}
+	
+	if ((path[strlen(path)-1] == '/'))
+	{
+		printf("Last char is a slash\n");
+		//char* origver = "";
+		//printf("%s\r\n",client->httpreq.httpver);
+		strcat(path, "index.html");
+		//printf("%s\r\n",client->httpreq.httpver);
+	}
+	
 
 	strtok(path, "?");
 
 	printf("File : %s\n", path);
-	
+
 	while (LWP_MutexLock (aMutex) != 0);
 
 	pFile = fopen (path, "r");
@@ -511,7 +546,7 @@ void sdpage(client_t *client)
 		}
 	}
 	
-	char* fileext = strtok(client->httpreq.path,".");
+	char* fileext = strtok(origpath,".");
 	fileext = strtok(NULL,".");
 	int i;
 	
@@ -561,9 +596,10 @@ void sdpage(client_t *client)
 	client->contlength=lSize;
 	printf("Sending\n");
 	
-	client->httpreq.path = origpath;
-	
 	headersend(client);
+	
+	strcpy(client->httpreq.path, origpath);
+	free(origpath);
 	
 	s32 sent = 1;
 	

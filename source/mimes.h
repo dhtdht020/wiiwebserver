@@ -81,5 +81,5 @@ builtin_mime_types[] =  {
 	{"xml",		"text/xml"						},
 	{"z",		"application/x-compress"		},
 	{"zip",		"application/x-zip-compressed"	},
-	{NULL,		"application/octect-stream"		}
+	{NULL,		NULL							}
 };

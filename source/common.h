@@ -83,4 +83,3 @@ bool scheck(void);
 void update();
 
 s32 set_blocking(s32 s, bool blocking);
-s32 net_close_blocking(s32 s);

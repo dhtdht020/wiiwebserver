@@ -83,8 +83,3 @@ s32 set_blocking(s32 s, bool blocking) {
     if (flags >= 0) flags = net_fcntl(s, F_SETFL, blocking ? (flags&~4) : (flags|4));
     return flags;
 }
-
-s32 net_close_blocking(s32 s) {
-    set_blocking(s, true);
-    return net_close(s);
-}
