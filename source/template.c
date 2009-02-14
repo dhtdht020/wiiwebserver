@@ -720,10 +720,17 @@ static void* waitforhome()
 		switch (event.type)
 		{
 			case KEYBOARD_CONNECTED:
-				printf("\nA keyboard has been connected\n");
+				printf("A keyboard has been connected\n");
+				KEYBOARD_putOnLed(KEYBOARD_LEDSCROLL);
+				KEYBOARD_putOnLed(KEYBOARD_LEDNUM);
+				KEYBOARD_putOnLed(KEYBOARD_LEDCAPS);
+				sleep(1);
+				KEYBOARD_putOffLed(KEYBOARD_LEDSCROLL);
+				KEYBOARD_putOffLed(KEYBOARD_LEDNUM);
+				KEYBOARD_putOffLed(KEYBOARD_LEDCAPS);
 			break;
 			case KEYBOARD_DISCONNECTED:
-				printf("\nA keyboard has been disconnected\n");
+				printf("A keyboard has been disconnected\n");
 			break;
 			case KEYBOARD_PRESSED:
 				if (event.keysym.ch==KEYBOARD_ESCAPE)
