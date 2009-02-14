@@ -491,11 +491,6 @@ void sdpage(client_t *client)
 		strcat(path, "index.html");
 		//printf("%s\r\n",client->httpreq.httpver);
 	}
-	
-
-	strtok(path, "?");
-
-	printf("File : %s\n", path);
 
 	while (LWP_MutexLock (aMutex) != 0);
 
@@ -557,6 +552,10 @@ void sdpage(client_t *client)
 			client->mimetype=builtin_mime_types[i].mime_type;
 		}
 	}
+	
+	strtok(path, "?");
+
+	printf("File : %s\n", path);
 	
 	if ((strcmp(client->mimetype, "")==0))
 	{
