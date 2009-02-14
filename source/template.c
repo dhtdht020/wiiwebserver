@@ -57,6 +57,8 @@ are any faults please contact me and i'll be glad to make any necessary correcti
 #include <sys/dir.h>
 //#include <kbd.h>
 
+#include <libwiikeyboard/keyboard.h>
+
 //Built in Files
 #include "inbuilt.h"
 
@@ -707,16 +709,35 @@ void csocket(void)
 
 static void* waitforhome()
 {
+	keyboardEvent event;
 	while(1) 
 	{
 		WPAD_ScanPads();
 		PAD_ScanPads();
+		KEYBOARD_ScanKeyboards();
+		if (! KEYBOARD_getEvent(&event))
+			continue;
+		switch (event.type)
+		{
+			case KEYBOARD_CONNECTED:
+				printf("\nA keyboard has been connected\n");
+			break;
+			case KEYBOARD_DISCONNECTED:
+				printf("\nA keyboard has been disconnected\n");
+			break;
+			case KEYBOARD_PRESSED:
+				if (event.keysym.ch==KEYBOARD_ESCAPE)
+					exit(0);
+			break;
+			case KEYBOARD_RELEASED:
+				
+			break;
+		}
 		u32 pressed = WPAD_ButtonsDown(0);
 		u32 padpressed = PAD_ButtonsDown(0);
 		if ( (pressed & WPAD_BUTTON_HOME) || (pressed & WPAD_GUITAR_HERO_3_BUTTON_YELLOW) || (padpressed & PAD_BUTTON_MENU) || (pressed & WPAD_NUNCHUK_BUTTON_C) )
 		{
-			printf("ByeBye ...");
-			sleep(1);			
+			printf("ByeBye ...");			
 			exit(0);
 		}
 		VIDEO_WaitVSync();
@@ -728,6 +749,7 @@ int main(int argc, char **argv)
 	VIDEO_Init();
 	PAD_Init();
 	WPAD_Init();
+	KEYBOARD_Init();
 	fatInitDefault();
 	
 	switch(VIDEO_GetCurrentTvMode()) 
