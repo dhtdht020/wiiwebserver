@@ -6,15 +6,15 @@ except for any code that is credited to other
 developers, this goes for all wii web server 
 source files
 
-joedj - sections of ftpii are used and unchanged in common.c and common.h
-			unwanted code has been removed from these files, the only code left
-			should be write_exact and relating functions
+joedj 		- sections of ftpii are used and unchanged in common.c and common.h
+				unwanted code has been removed from these files, the only code left
+				should be write_exact and relating functions
 		  
-teknecal - 	sections of wiihttpd are used, these include converting %20 to spaces
-				and checking for ../ and ./
-			the "HEAD" handling routine is used as 'inspiration' and is not exactly
-				the same but credit is still given here
-			time code for the header is also used
+teknecal 	- 	sections of wiihttpd are used, these include converting %20 to spaces
+					and checking for ../ and ./
+				the "HEAD" handling routine is used as 'inspiration' and is not exactly
+					the same but credit is still given here
+				time code for the header is also used
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from
@@ -81,7 +81,7 @@ lwpq_t ThreadOneQ;
 s32 netSocket;
 
 // Current server version
-char* servver="0.92";
+char* servver="0.93";
 
 // Settings file path
 //char* settingsfile = "sd:/data/settings/wiiweb.xml";
@@ -707,13 +707,11 @@ void csocket(void)
 	socket_ready=true;
 }
 
-static void* waitforhome()
+static void* waitforescape()
 {
 	keyboardEvent event;
-	while(1) 
+	while(1)
 	{
-		WPAD_ScanPads();
-		PAD_ScanPads();
 		KEYBOARD_ScanKeyboards();
 		if (! KEYBOARD_getEvent(&event))
 			continue;
@@ -730,21 +728,28 @@ static void* waitforhome()
 				KEYBOARD_putOffLed(KEYBOARD_LEDCAPS);
 			break;
 			case KEYBOARD_DISCONNECTED:
-				printf("A keyboard has been disconnected\n");
+			printf("A keyboard has been disconnected\n");
 			break;
 			case KEYBOARD_PRESSED:
 				if (event.keysym.ch==KEYBOARD_ESCAPE)
 					exit(0);
 			break;
-			case KEYBOARD_RELEASED:
-				
+			case KEYBOARD_RELEASED:		
 			break;
 		}
+	}
+}
+
+static void* waitforhome()
+{
+	while(1) 
+	{
+		WPAD_ScanPads();
+		PAD_ScanPads();
 		u32 pressed = WPAD_ButtonsDown(0);
 		u32 padpressed = PAD_ButtonsDown(0);
-		if ( (pressed & WPAD_BUTTON_HOME) || (pressed & WPAD_GUITAR_HERO_3_BUTTON_YELLOW) || (padpressed & PAD_BUTTON_MENU) || (pressed & WPAD_NUNCHUK_BUTTON_C) )
-		{
-			printf("ByeBye ...");			
+		if ( (pressed & WPAD_CLASSIC_BUTTON_HOME) || (pressed & WPAD_BUTTON_HOME) || (pressed & WPAD_GUITAR_HERO_3_BUTTON_YELLOW) || (padpressed & PAD_BUTTON_MENU) || (pressed & WPAD_NUNCHUK_BUTTON_C) )
+		{		
 			exit(0);
 		}
 		VIDEO_WaitVSync();
@@ -804,6 +809,7 @@ int main(int argc, char **argv)
 	u32 len = sizeof(sa);
 	
 	LWP_CreateThread (&serverT, waitforhome, NULL, NULL, 0, 80);
+	LWP_CreateThread (&serverT, waitforescape, NULL, NULL, 0, 80);
 	
 	printf("Ready ...\n\n");
 	
