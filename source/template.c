@@ -85,8 +85,6 @@ char* servver="0.93";
 
 // Settings file path
 //char* settingsfile = "sd:/data/settings/wiiweb.xml";
-// Inits 404
-char* c_404="nofile";    // Custom 404 file path
 // Inits 500
 char* c_500="nofile";    // Custom 500 file path
 // Inits denied
@@ -297,6 +295,7 @@ void _500(client_t *client,char* forcd, bool rampage)
 	}
 }
 
+/*
 void _404(client_t *client, char* forcd)
 {
 	set_blocking(client->socket,true);
@@ -304,6 +303,107 @@ void _404(client_t *client, char* forcd)
 	client->http11.statuscode="404";
 	client->http10.status="Not Found";
 	client->http11.status="Not Found";
+	
+	if ((strcmp(forcd,"yes")==0))
+	{
+		client->contlength=_404_html_size;
+		client->mimetype="text/html";
+		headersend(client);
+		net_write(client->socket, _404_html, _404_html_size);
+		printf("Sent\n");
+		usleep(200000);
+		VIDEO_WaitVSync();
+		set_blocking(client->socket,false);
+		net_close(client->socket);
+	}
+	else
+	{
+		char path[100] = "sd:/data/web/error/404.html";
+		
+		while (LWP_MutexLock (aMutex) != 0);
+	
+		pFile = fopen (path, "r");
+		if (pFile==NULL)
+		{
+			if ((strcmp(client->httpreq.method, "HEAD")==0))
+			{
+			}
+			else
+			{
+				fclose (pFile);
+				client->contlength=_404_html_size;
+				client->mimetype="text/html";
+				headersend(client);
+				net_write(client->socket, _404_html, _404_html_size);
+				printf("Sent\n");
+				usleep(200000);
+				VIDEO_WaitVSync();
+				set_blocking(client->socket,false);
+				net_close(client->socket);
+				return;
+			}
+		}
+		if (pFile!=NULL) 
+		{   
+			fseek (pFile , 0 , SEEK_END);
+			lSize = ftell (pFile);
+			rewind (pFile);
+			buffer = (char*) malloc (sizeof(char)*lSize);
+			if (buffer == NULL) 
+			{
+				fputs ("   Memory error",stderr); 
+				fclose(pFile); 
+				_500(client, "no", 1); 
+				set_blocking(client->socket,false);
+				set_blocking(client->socket,false);
+				LWP_MutexUnlock (aMutex);
+				net_close(client->socket);
+				return;
+			}
+			result = fread (buffer,1,lSize,pFile);
+			if (result != lSize) 
+			{
+				fputs ("   Reading error",stderr); 
+				fclose(pFile); 
+				_500(client, "no", 1); 
+				set_blocking(client->socket,false);
+				LWP_MutexUnlock (aMutex);
+				net_close(client->socket);
+				return;
+			}
+			fclose (pFile); 
+			client->mimetype="text/html";
+			char* filecontent=buffer;
+			buffer=NULL;
+			client->contlength=lSize;
+			printf("Sending\n");
+			headersend(client);
+			if ((strcmp(client->httpreq.method, "HEAD")==0))
+			{
+			}
+			else
+			{
+				write_exact(client->socket, filecontent, client->contlength);
+			}
+			printf("Sent\n");
+			sleep(1);
+			VIDEO_WaitVSync();
+			LWP_MutexUnlock (aMutex);
+			set_blocking(client->socket,false);
+			net_close(client->socket);
+		}
+	}
+	return;
+}
+*/
+void _404(client_t *client, char* forcd)
+{
+	set_blocking(client->socket,true);
+	client->http10.statuscode="404";
+	client->http11.statuscode="404";
+	client->http10.status="Not Found";
+	client->http11.status="Not Found";
+	char* c_404 = "nofile";
 	
 	if ((strcmp(forcd,"yes")==0))
 	{
@@ -411,6 +511,18 @@ void sdpage(client_t *client)
 	char* filecontent = "TEST";
 	char* origpath = malloc(1000);
 	strcpy(origpath, client->httpreq.path);
+	
+	/*char* secondpath = "sd://data/web";
+	strcat(secondpath,client->httpreq.path);
+	strcat(secondpath,"/");
+	DIR_ITER* dp = diropen (secondpath);
+	if (dp == NULL)
+	{
+		strcat(origpath,"/");
+	}*/
+	
+	printf("File: %s \n",origpath);
+	
 	int pathlen = strlen(origpath);
 	
 	printf("Length : %d\n",pathlen);
@@ -461,7 +573,7 @@ void sdpage(client_t *client)
 			strcat(space_replace, space_tok);
 		}
 	}
-	origpath = space_replace;
+	strcpy(origpath,space_replace);
 	
 	char path[100] = "sd:/data/web";
 	
@@ -659,10 +771,10 @@ static void* reqhandle(void *arg)
 	char* newline = strstr(client->httpreq.httpver, "\r\n"); 
 	if (newline) *newline = '\0';
 	
-	printf("File: %s \n",client->httpreq.path);
 	
 	if ((strcmp(client->httpreq.path,"/favicon.ico"))==0)
 	{
+		printf("File: %s \n",client->httpreq.path);
 		favicon(client);
 		free(client);
 	}
@@ -707,6 +819,7 @@ void csocket(void)
 	socket_ready=true;
 }
 
+/*
 static void* waitforescape()
 {
 	keyboardEvent event;
@@ -739,6 +852,7 @@ static void* waitforescape()
 		}
 	}
 }
+*/
 
 static void* waitforhome()
 {
@@ -761,7 +875,7 @@ int main(int argc, char **argv)
 	VIDEO_Init();
 	PAD_Init();
 	WPAD_Init();
-	KEYBOARD_Init();
+	//KEYBOARD_Init();
 	fatInitDefault();
 	
 	switch(VIDEO_GetCurrentTvMode()) 
@@ -809,7 +923,7 @@ int main(int argc, char **argv)
 	u32 len = sizeof(sa);
 	
 	LWP_CreateThread (&serverT, waitforhome, NULL, NULL, 0, 80);
-	LWP_CreateThread (&serverT, waitforescape, NULL, NULL, 0, 80);
+	//LWP_CreateThread (&serverT, waitforescape, NULL, NULL, 0, 80);
 	
 	printf("Ready ...\n\n");
 	
