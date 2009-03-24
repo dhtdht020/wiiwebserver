@@ -55,9 +55,6 @@ are any faults please contact me and i'll be glad to make any necessary correcti
 #include <ogc/mutex.h>
 #include <fcntl.h>
 #include <sys/dir.h>
-//#include <kbd.h>
-
-#include <libwiikeyboard/keyboard.h>
 
 //Built in Files
 #include "inbuilt.h"
@@ -569,20 +566,45 @@ void _404(client_t *client, char* forcd)
 	return;
 }*/
 
+bool isfolder(char* inputpath)
+{
+	DIR_ITER* dir;
+
+	printf("Testing ... %s\r\n",inputpath);
+	
+	char* pathtotest = "sd://";
+	
+	strcat(pathtotest,inputpath);
+	
+	strcat(pathtotest,"/");
+
+	dir = diropen (pathtotest); 
+
+	if (dir == NULL) 
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 void sdpage(client_t *client)
 {
 	char* filecontent = "TEST";
 	char* origpath = malloc(1000);
 	strcpy(origpath, client->httpreq.path);
 	
-	/*char* secondpath = "sd://data/web";
-	strcat(secondpath,client->httpreq.path);
-	strcat(secondpath,"/");
-	DIR_ITER* dp = diropen (secondpath);
-	if (dp == NULL)
+	if(isfolder(origpath))
 	{
-		strcat(origpath,"/");
-	}*/
+		printf("Directory detected ...\r\n");
+		//strcat(origpath,"/index.html");
+	}
+	else
+	{
+		printf("Not a directory ...\r\n");
+	}
 	
 	printf("File: %s \n",origpath);
 	
@@ -592,11 +614,8 @@ void sdpage(client_t *client)
 	
 	if ((origpath[pathlen-1] == '/'))
 	{
-		printf("Last char is a slash\n");
-		//char* origver = "";
-		//printf("%s\r\n",client->httpreq.httpver);
+		printf("Last char is a slash\r\n");
 		strcat(origpath, "index.html");
-		//printf("%s\r\n",client->httpreq.httpver);
 	}
 	
 	if ((strcmp(origpath, "/index")==0))
@@ -663,10 +682,7 @@ void sdpage(client_t *client)
 	if ((path[strlen(path)-1] == '/'))
 	{
 		printf("Last char is a slash\n");
-		//char* origver = "";
-		//printf("%s\r\n",client->httpreq.httpver);
 		strcat(path, "index.html");
-		//printf("%s\r\n",client->httpreq.httpver);
 	}
 
 	while (LWP_MutexLock (aMutex) != 0);
@@ -778,9 +794,6 @@ void sdpage(client_t *client)
 	free(origpath);
 	
 	s32 sent = 1;
-	
-	//printf(filecontent);
-	//printf("\n");
 	
 	if ((strcmp(client->httpreq.method, "HEAD")==0))
 	{
