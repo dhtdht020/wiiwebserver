@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>WiiWebServer Admin Page</title>
+<style>
+#header
+{
+	background-color: yellow;
+	position:absolute;
+	top:0;
+	left:0;
+	height:60;
+	width:100%;
+}
+
+#version
+{
+    position:absolute;
+    left:5;
+    top:5;
+}
+
+#tools
+{
+    position:fixed;
+    top:5;
+    right:5;
+}
+
+#stats
+{
+    position:absolute;
+	top:25;
+	left:5;
+}
+
+#blackbar
+{
+	background-color:black;
+	position:absolute;
+	top:60;
+	left:0;
+	width:100%;
+	height:3;
+}
+</style>
+</head>
+<body>
+<div id="header">
+<div id="version">Version : vX.XX</div>
+<div id="tools">Shutdown</div>
+<div id="stats">Current connected clients : X</div>
+</div>
+<div id="blackbar" />
+</body>
+</html>
