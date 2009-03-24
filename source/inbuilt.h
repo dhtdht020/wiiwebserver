@@ -16,6 +16,8 @@ extern const u8 admin2_html[];
 extern const u32 admin2_html_size;
 extern const u8 admin3_html[];
 extern const u32 admin3_html_size;
+extern const u8 master_html[];
+extern const u32 master_html_size;
 
 
 

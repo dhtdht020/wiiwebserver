@@ -200,6 +200,27 @@ void favicon(client_t *client)
 	return;
 }
 
+void adminpages(client_t *client)
+{
+	set_blocking(client->socket,true);
+	printf("Sending administration page\n");
+	client->mimetype="text/html";
+	client->contlength = sizeof(master_html_size+2);
+	headersend(client);
+	net_write(client->socket,admin1_html,admin1_html_size);
+	net_write(client->socket,servver,sizeof(servver));
+	net_write(client->socket,admin2_html,admin2_html_size);
+	net_write(client->socket,"N/A",3);
+	net_write(client->socket,admin3_html,admin3_html_size);
+	printf("Sent \n");
+	usleep(200000);
+	VIDEO_WaitVSync();
+	set_blocking(client->socket,false);
+	LWP_MutexUnlock (aMutex);
+	net_close(client->socket);
+	return;
+}
+
 void _500(client_t *client,char* forcd, bool rampage)
 {
 	set_blocking(client->socket,true);
@@ -364,17 +385,11 @@ void _404(client_t *client, char* forcd)
 bool isfolder(char* inputpath)
 {
 	DIR_ITER* dir;
-
 	printf("Testing ... %s\r\n",inputpath);
-	
 	char* pathtotest = "sd://";
-	
 	strcat(pathtotest,inputpath);
-	
 	strcat(pathtotest,"/");
-
 	dir = diropen (pathtotest); 
-
 	if (dir == NULL) 
 	{
 		return false;
@@ -651,8 +666,17 @@ static void* reqhandle(void *arg)
 	}
 	else
 	{
-		sdpage(client);
-		free(client);
+		if ((strcmp(client->httpreq.path,"/admin"))==0)
+		{
+			printf("File: %s \n",client->httpreq.path);
+			adminpages(client);
+			free(client);
+		}
+		else
+		{
+			sdpage(client);
+			free(client);
+		}
 	}
 
 	return NULL;
