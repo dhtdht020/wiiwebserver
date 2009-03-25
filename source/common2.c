@@ -15,6 +15,8 @@
 #include <ogc/mutex.h>
 #include <fcntl.h>
 
+#include "cdecode.h"
+
 //Built in Files
 #include "inbuilt.h"
 
@@ -44,6 +46,15 @@ bool scheck(void)
 		}
 		count++;
 	}
+}
+
+char* base64totext(char* base64text)
+{
+	base64_decodestate basestate;
+	char* normaltext = "";
+	base64_init_decodestate(&basestate);
+	base64_decode_block(base64text, strlen(base64text), normaltext, &basestate);
+	return normaltext;
 }
 
 int write_data(int s, char *buf, int n)

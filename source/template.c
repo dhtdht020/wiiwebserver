@@ -78,17 +78,10 @@ lwpq_t ThreadOneQ;
 s32 netSocket;
 
 // Current server version
-char* servver="0.93";
+char* servver="0.94";
 
-// Settings file path
-//char* settingsfile = "sd:/data/settings/wiiweb.xml";
-// Inits 500
-//char* c_500="nofile";    // Custom 500 file path
 // Inits denied
 char* c_denied="nofile"; // Custom denied file path
-// RAM based error 500 page
-//char* ram_500;
-//int ram_500_size;
 void sdpage(client_t *client);
 void _500(client_t *client,char* forcd, bool rampage);
 char* password;
@@ -203,16 +196,16 @@ void favicon(client_t *client)
 void adminpages(client_t *client)
 {
 	set_blocking(client->socket,true);
-	printf("Sending administration page\n");
+	printf("Sending administration page\r\n");
 	client->mimetype="text/html";
-	client->contlength = sizeof(master_html_size+2);
+	client->contlength = sizeof(master_html_size)+3+sizeof(servver);
 	headersend(client);
 	net_write(client->socket,admin1_html,admin1_html_size);
 	net_write(client->socket,servver,sizeof(servver));
 	net_write(client->socket,admin2_html,admin2_html_size);
 	net_write(client->socket,"N/A",3);
 	net_write(client->socket,admin3_html,admin3_html_size);
-	printf("Sent \n");
+	printf("Sent \r\n");
 	usleep(200000);
 	VIDEO_WaitVSync();
 	set_blocking(client->socket,false);
@@ -768,7 +761,29 @@ int main(int argc, char **argv)
 	printf("\n");
 	printf("Starting ...\n");
 	printf("\n");
-	password = " ";
+	
+		/*char path[100] = "sd:/data/settings/password.dat";
+		pFile = fopen (path, "r");
+		if (pFile!=NULL) 
+		{   
+			fseek (pFile , 0 , SEEK_END);
+			lSize = ftell (pFile);
+			rewind (pFile);
+			buffer = (char*) malloc (sizeof(char)*lSize);
+			if (buffer == NULL) {fputs ("   Memory error",stderr); fclose(pFile);}
+			result = fread (buffer,1,lSize,pFile);
+			if (result != lSize) {fputs ("   Reading error",stderr); fclose(pFile);}
+			fclose (pFile); 
+			char* filecontent=buffer;
+			buffer=NULL;
+			password = filecontent;
+			//printf("Password = %s\r\n",password);
+		}
+		else
+		{
+			printf("Password file not found, using blank password ...\n");
+			password = "";
+		}*/
 	
 	LWP_MutexInit (&aMutex, false);
 
@@ -782,12 +797,12 @@ int main(int argc, char **argv)
 	u32 len = sizeof(sa);
 	
 	LWP_CreateThread (&serverT, waitforhome, NULL, NULL, 0, 80);
-	//LWP_CreateThread (&serverT, waitforescape, NULL, NULL, 0, 80);
 	
 	printf("Ready ...\n\n");
 	
 	while(1)
 	{	
+		clients++;
 		client_s=net_accept(netSocket, (struct sockaddr*)&sa, &len);
 		client_t *client = malloc(sizeof(client_t));
 		printf("Connection\n");
@@ -799,7 +814,7 @@ int main(int argc, char **argv)
 		client->http10.status=" ";
 		client->socket = client_s;
 		LWP_CreateThread (&serverT, reqhandle, client, NULL, 0, 80);
-		//reqhandle(client, message);
+		clients--;
 	}
 
     exit(0);
