@@ -18,6 +18,8 @@ extern const u8 admin3_html[];
 extern const u32 admin3_html_size;
 extern const u8 master_html[];
 extern const u32 master_html_size;
+extern const u8 wiiwebserver_lines_png[];
+extern const u32 wiiwebserver_lines_png_size;
 
 
 
