@@ -728,7 +728,10 @@ int main(int argc, char **argv)
 	VIDEO_Init();
 	PAD_Init();
 	WPAD_Init();
-	fatInitDefault();
+	if (!fatInitDefault()) {
+		printf("fatInitDefault failure: terminating\n");
+		sleep(4);
+	}
 	
 	switch(VIDEO_GetCurrentTvMode()) 
 	{
