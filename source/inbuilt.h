@@ -8,6 +8,8 @@ extern const u8 quit_html[];
 extern const u32 quit_html_size;
 extern const u8 denied_html[];
 extern const u32 denied_html_size;
+extern const u8 ce_jpg[];
+extern const u32 ce_jpg_size;
 
 //admin page parts
 extern const u8 admin1_html[];
